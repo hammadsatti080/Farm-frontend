@@ -1,0 +1,166 @@
+/* NAVBAR BACKGROUND */
+.navbar {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* MAIN CONTAINER */
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* INNER FLEX */
+.navbar-inner {
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* LOGO */
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  padding-top: 40px;
+  gap: 6px;
+}
+/* DESKTOP WRAPPER */
+.desktop-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* LEFT LINKS */
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-left: 30px;
+}
+
+/* LINKS */
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  opacity: 0.9;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.nav-link:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+/* Animated underline */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: white;
+  transition: 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* BUTTON */
+.nav-button {
+  background: white;
+  color: #16a34a;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+/* Hover */
+.nav-button:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  background: #f0fdf4;
+}
+
+/* Click effect */
+.nav-button:active {
+  transform: scale(0.95);
+}
+/* MOBILE BUTTON */
+.mobile-btn {
+  font-size: 28px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: none;
+}
+
+/* MOBILE MENU */
+.mobile-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* MOBILE LINKS */
+.mobile-link {
+  color: white;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.mobile-link:hover {
+  transform: translateX(8px);
+  opacity: 0.8;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .desktop-wrapper {
+    display: none;
+  }
+
+  .mobile-btn {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-menu {
+    display: none;
+  }
+}
+
+
+.nav-text {
+  display: inline-block;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  color: white;
+}
+
+.nav-link:hover .nav-text {
+  transform: translateY(-2px);
+}

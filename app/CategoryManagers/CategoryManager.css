@@ -1,0 +1,136 @@
+.category-form {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+/* INPUT */
+.category-form input {
+  flex: 1;
+  min-width: 200px;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+  transition: 0.2s ease;
+  background: #fff;
+}
+
+.category-form input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+/* BUTTON */
+.category-form button {
+  padding: 12px 18px;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.category-form button:hover {
+  background: #3730a3;
+  transform: translateY(-1px);
+}
+
+/* GRID */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+/* CARD */
+.category-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: 0.25s ease;
+  border: 1px solid #f1f1f1;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* TITLE */
+.category-card h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: #111827;
+  word-break: break-word;
+}
+
+/* ACTION BUTTONS */
+.card-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.card-actions button {
+  flex: 1;
+  padding: 9px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+/* EDIT */
+.card-actions button:first-child {
+  background: #f59e0b;
+  color: #fff;
+}
+
+.card-actions button:first-child:hover {
+  background: #d97706;
+}
+
+/* DELETE */
+.card-actions button:last-child {
+  background: #ef4444;
+  color: #fff;
+}
+
+.card-actions button:last-child:hover {
+  background: #dc2626;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .category-form {
+    flex-direction: column;
+  }
+
+  .category-form button {
+    width: 100%;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .category-card {
+    padding: 14px;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .card-actions button {
+    width: 100%;
+  }
+}

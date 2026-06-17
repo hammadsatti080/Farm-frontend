@@ -1,0 +1,300 @@
+/* ================= PAGE BACKGROUND ================= */
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f4f6fb;
+}
+
+/* ================= TITLE ================= */
+h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 20px;
+}
+
+/* ================= TABLE WRAPPER ================= */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* ================= TABLE DESIGN ================= */
+.milk-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* HEADER */
+.milk-table thead {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: white;
+}
+
+.milk-table th {
+  padding: 14px;
+  text-align: left;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+/* ROWS */
+.milk-table td {
+  padding: 14px;
+  font-size: 14px;
+  color: #374151;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+/* HOVER EFFECT */
+.milk-table tbody tr:hover {
+  background: #f9fafb;
+  transition: 0.2s;
+  transform: scale(1.001);
+}
+
+/* EVEN ROW STYLE */
+.milk-table tbody tr:nth-child(even) {
+  background: #fcfcfc;
+}
+
+/* ================= MOBILE CARDS ================= */
+.mobile-cards {
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+/* CARD */
+.milk-card {
+  background: white;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  border-left: 5px solid #4f46e5;
+  transition: 0.2s;
+}
+
+.milk-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* CARD HEADER */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* BADGE */
+.badge {
+  background: #4f46e5;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* MILK TYPE */
+.type {
+  font-weight: 700;
+  color: #111827;
+  font-size: 14px;
+}
+
+/* CARD TEXT */
+.card-body p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.card-body b {
+  color: #111827;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .milk-table {
+    display: none;
+  }
+
+  .mobile-cards {
+    display: flex;
+  }
+}
+
+/* ================= EMPTY STATE (optional future use) ================= */
+.empty {
+  text-align: center;
+  padding: 30px;
+  color: #9ca3af;
+}
+
+
+/* ================= PAGE ================= */
+.page {
+  padding: 20px;
+  background: #f4f6fb;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #111827;
+}
+
+/* ================= TABLE SCROLL (IMPORTANT) ================= */
+.table-container {
+  max-height: 420px;     /* 👈 scroll height */
+  overflow-y: auto;      /* 👈 vertical scroll */
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* Sticky header while scrolling */
+.milk-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+/* ================= TABLE ================= */
+.milk-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+/* HEADER */
+.milk-table th {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: white;
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+
+/* CELLS */
+.milk-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #374151;
+}
+
+/* ROW HOVER */
+.milk-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* ================= BUTTONS (PRO DESIGN) ================= */
+.edit-btn {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin-right: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.edit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(245, 158, 11, 0.3);
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(239, 68, 68, 0.3);
+}
+
+/* ================= TOTAL ROW ================= */
+tfoot td {
+  padding: 12px;
+  color: #111827;
+  font-weight: bold;
+}
+
+/* ================= MOBILE CARDS ================= */
+.mobile-cards {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.milk-card {
+  background: white;
+  padding: 15px;
+  border-radius: 14px;
+  border-left: 5px solid #4f46e5;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.badge {
+  background: #4f46e5;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.type {
+  font-weight: bold;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* MOBILE TOTAL */
+.total-box {
+  margin-top: 15px;
+  padding: 12px;
+  color: #111827;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .milk-table {
+    display: none;
+  }
+
+  .mobile-cards {
+    display: flex;
+  }
+}

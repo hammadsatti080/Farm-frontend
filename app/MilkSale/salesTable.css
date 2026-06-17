@@ -1,0 +1,77 @@
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  padding: 10px;
+}
+
+.sales-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.sales-table thead {
+  background: #0f172a;
+  color: white;
+}
+
+.sales-table th,
+.sales-table td {
+  padding: 14px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.sales-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: 0.2s;
+}
+
+.sales-table tbody tr:hover {
+  background: #f1f5f9;
+  transform: scale(1.01);
+}
+
+.sales-table td {
+  color: #334155;
+}
+
+/* MOBILE CARDS */
+.sales-cards {
+  padding: 10px;
+  display: grid;
+  gap: 12px;
+}
+
+.sales-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 15px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid #22c55e;
+  transition: 0.2s;
+}
+
+.sales-card:hover {
+  transform: translateY(-3px);
+}
+
+.sales-card h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.sales-card p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #475569;
+}
+
+.sales-card .price {
+  font-weight: bold;
+  color: #16a34a;
+}

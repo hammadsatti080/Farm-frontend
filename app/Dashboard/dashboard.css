@@ -1,0 +1,282 @@
+/* =========================
+   BASE
+========================= */
+
+.dashboard-container {
+    min-height: 100vh;
+    background: #f4f7fc;
+}
+
+/* Desktop layout */
+.desktop-layout {
+    display: flex;
+}
+
+/* =========================
+   SIDEBAR (DESKTOP)
+========================= */
+
+.sidebar {
+    width: 150px;
+    background: #0f172a;
+    color: white;
+    min-height: 100vh;
+    padding: 20px;
+
+    transition: all 0.3s ease;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo h2 {
+    color: #60a5fa;
+    margin: 0;
+}
+
+/* Menu */
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    padding: 12px 14px;
+    margin-bottom: 8px;
+
+    border-radius: 8px;
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover animation */
+.menu li:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(5px);
+}
+
+/* Active item glow */
+.menu li.active {
+    background: #2563eb;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+/* Smooth underline animation */
+.menu li::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    width: 0%;
+    height: 2px;
+
+    background: #60a5fa;
+    transition: 0.3s;
+}
+
+.menu li:hover::after {
+    width: 100%;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content {
+    flex: 1;
+    padding: 30px;
+
+    animation: fadeIn 0.4s ease;
+}
+
+.content h1 {
+    margin-top: 0;
+    color: #111827;
+}
+
+/* Page fade animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   MOBILE NAVBAR
+========================= */
+
+.mobile-navbar {
+    display: none;
+}
+
+.mobile-menu {
+    display: none;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+    /* hide sidebar */
+    .sidebar {
+        display: none;
+    }
+
+    /* top navbar */
+    .mobile-navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        background: #0f172a;
+        color: white;
+
+        padding: 15px 20px;
+
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+
+        animation: slideDown 0.3s ease;
+    }
+
+    /* navbar animation */
+    @keyframes slideDown {
+        from {
+            transform: translateY(-100%);
+        }
+
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    .mobile-toggle {
+        width: 42px;
+        height: 42px;
+
+        border: none;
+        background: #2563eb;
+        color: white;
+
+        font-size: 22px;
+        border-radius: 8px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .mobile-toggle:hover {
+        transform: rotate(90deg);
+    }
+
+    /* dropdown menu */
+    .mobile-menu {
+        display: flex;
+        flex-direction: column;
+
+        background: #0f172a;
+
+        border-bottom: 1px solid #ddd;
+
+        animation: dropFade 0.25s ease;
+    }
+
+    @keyframes dropFade {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .mobile-menu button {
+        padding: 14px 16px;
+
+        border: none;
+
+        background: #0f172a;
+
+        text-align: center;
+        color: white;
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .mobile-menu button:hover {
+        background: #f3f4f6;
+        transform: translateX(5px);
+        color: #2563eb;
+
+    }
+
+    .active-mobile {
+        background: #e0ecff;
+        color: white;
+        font-weight: 600;
+
+    }
+
+    /* content */
+    .content
+    {
+        padding: 20px;
+
+
+    }
+}
+
+.dropdown-title {
+  cursor: pointer;
+  padding: 12px;
+  font-weight: 600;
+}
+
+.submenu {
+  list-style: none;
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.submenu li {
+  padding: 10px;
+  cursor: pointer;
+  color: #ddd;
+}
+
+.submenu li:hover {
+  background: #2d3748;
+  border-radius: 6px;
+}
+
+.mobile-submenu {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+}
+
+.mobile-submenu button {
+  margin: 4px 0;
+}

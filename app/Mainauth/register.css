@@ -1,0 +1,144 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f3f6fb;
+}
+
+/* ================= MAIN FLEX CONTAINER ================= */
+.container {
+  display: flex;
+  gap: 20px;
+  padding: 0 20px 20px 20px;
+  min-height: 100vh;
+  align-items: flex-start;
+}
+
+/* ================= LEFT SIDE (FORM WRAPPER) ================= */
+.card {
+  flex: 1;
+  min-width: 300px;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* inputs inside Register component */
+.card input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.card input:focus {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+/* button inside Register */
+.card button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.card button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(34, 197, 94, 0.25);
+}
+
+/* ================= RIGHT SIDE ================= */
+.cards-section {
+  flex: 2;
+  min-width: 300px;
+
+  padding: 20px;
+  border-radius: 16px;
+
+}
+
+/* TITLE */
+.cards-section h2 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: #1f2937;
+}
+
+/* ================= CARDS GRID ================= */
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+/* SINGLE CARD */
+.admin-card {
+  background: #f9fafb;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  transition: 0.3s;
+  border: 1px solid #eee;
+}
+
+.admin-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* AVATAR */
+.avatar {
+  width: 45px;
+  height: 45px;
+  background: #22c55e;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  font-weight: bold;
+}
+
+/* ================= MOBILE RESPONSIVE ================= */
+/* Prevent horizontal scrolling */
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .card,
+  .cards-section {
+    width: 100%;
+    min-width: 0;
+    /* important */
+  }
+
+  .admin-grid {
+    grid-template-columns: 1fr;
+    /* optional: one card per row */
+  }
+}
