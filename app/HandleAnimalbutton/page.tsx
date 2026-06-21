@@ -57,14 +57,14 @@ useEffect(() => {
             try {
                 // categories
                 const catRes = await fetch(
-                    "http://localhost:5000/api/animalcategories"
+                    "https://farm-backend-lac.vercel.app/api/animalcategories"
                 );
                 const catData = await catRes.json();
                 setTypes(catData);
 
                 // animals
                 const animalRes = await fetch(
-                    "http://localhost:5000/api/Handleanimals"
+                    "https://farm-backend-lac.vercel.app/api/Handleanimals"
                 );
                 const animalData = await animalRes.json();
                 setAnimals(animalData);
@@ -82,7 +82,7 @@ useEffect(() => {
     const handleAdd = async () => {
         if (editId) {
             await fetch(
-                `http://localhost:5000/api/Handleanimals/${editId}`,
+                `https://farm-backend-lac.vercel.app/api/Handleanimals/${editId}`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
@@ -90,7 +90,7 @@ useEffect(() => {
                 }
             );
         } else {
-            await fetch("http://localhost:5000/api/Handleanimals", {
+            await fetch("https://farm-backend-lac.vercel.app/api/Handleanimals", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form),
@@ -111,7 +111,7 @@ useEffect(() => {
         });
 
         const res = await fetch(
-            "http://localhost:5000/api/Handleanimals"
+            "https://farm-backend-lac.vercel.app/api/Handleanimals"
         );
         const data = await res.json();
         setAnimals(data);
@@ -134,14 +134,14 @@ useEffect(() => {
         if (!id) return;
 
         await fetch(
-            `http://localhost:5000/api/Handleanimals/${id}`,
+            `https://farm-backend-lac.vercel.app/api/Handleanimals/${id}`,
             {
                 method: "DELETE",
             }
         );
 
         const res = await fetch(
-            "http://localhost:5000/api/Handleanimals"
+            "https://farm-backend-lac.vercel.app/api/Handleanimals"
         );
         const data = await res.json();
         setAnimals(data);

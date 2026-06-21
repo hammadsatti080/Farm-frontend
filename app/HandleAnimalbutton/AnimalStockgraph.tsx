@@ -37,7 +37,7 @@ export default function AnimalStockgraph() {
         const fetchAnimals = async () => {
             try {
                 const res = await fetch(
-                    "http://localhost:5000/api/Handleanimals"
+                    "https://farm-backend-lac.vercel.app/api/Handleanimals"
                 );
 
                 const data = await res.json();

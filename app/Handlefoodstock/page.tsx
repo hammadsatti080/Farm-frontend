@@ -36,7 +36,7 @@ export default function Page() {
     const fetchData = async () => {
         try {
             const res = await fetch(
-                "http://localhost:5000/api/inventory"
+                "https://farm-backend-lac.vercel.app/api/inventory"
             );
             const data = await res.json();
             setItems(data || []);
@@ -53,8 +53,8 @@ export default function Page() {
         const load = async () => {
             try {
                 const [invRes, typeRes] = await Promise.all([
-                    fetch("http://localhost:5000/api/inventory"),
-                    fetch("http://localhost:5000/api/inventory-types"),
+                    fetch("https://farm-backend-lac.vercel.app/api/inventory"),
+                    fetch("https://farm-backend-lac.vercel.app/api/inventory-types"),
                 ]);
 
                 const invData = await invRes.json();
@@ -82,7 +82,7 @@ export default function Page() {
     const handleSave = async () => {
         if (editId) {
             await fetch(
-                `http://localhost:5000/api/inventory/${editId}`,
+                `https://farm-backend-lac.vercel.app/api/inventory/${editId}`,
                 {
                     method: "PUT",
                     headers: {
@@ -94,7 +94,7 @@ export default function Page() {
             );
         } else {
             await fetch(
-                "http://localhost:5000/api/inventory",
+                "https://farm-backend-lac.vercel.app/api/inventory",
                 {
                     method: "POST",
                     headers: {
@@ -136,7 +136,7 @@ export default function Page() {
         if (!id) return;
 
         await fetch(
-            `http://localhost:5000/api/inventory/${id}`,
+            `https://farm-backend-lac.vercel.app/api/inventory/${id}`,
             {
                 method: "DELETE",
             }

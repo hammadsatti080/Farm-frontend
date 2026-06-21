@@ -24,8 +24,8 @@ interface TeamItem extends TeamForm {
 }
 
 /* ---------------- API ---------------- */
-const TEAM_API = "http://localhost:5000/api/handleteam";
-const ROLE_API = "http://localhost:5000/api/work-typesCatagory";
+const TEAM_API = "https://farm-backend-lac.vercel.app/api/handleteam";
+const ROLE_API = "https://farm-backend-lac.vercel.app/api/work-typesCatagory";
 
 /* ---------------- COMPONENT ---------------- */
 export default function Handleteam() {

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import "./Fetchadmin.css";
 
 export default function Fetchadmin() {
-  const API = "http://localhost:5000/api/auth";
+  const API = "https://farm-backend-lac.vercel.app/api/auth";
 
  // ✅ After
 interface Admin {

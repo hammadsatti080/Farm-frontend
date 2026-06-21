@@ -28,7 +28,7 @@ export default function SalesTable() {
 
 const fetchSales = useCallback(async (): Promise<void> => {
     try {
-        const res = await fetch("http://localhost:5000/api/sales");
+        const res = await fetch("https://farm-backend-lac.vercel.app/api/sales");
         const data = await res.json();
 
         if (!res.ok) throw new Error(data.error || "Failed");
@@ -51,7 +51,7 @@ useEffect(() => {
 }, [fetchSales]);
 
     const handleDelete = async (id: string) => {
-        await fetch(`http://localhost:5000/api/sales/${id}`, {
+        await fetch(`https://farm-backend-lac.vercel.app/api/sales/${id}`, {
             method: "DELETE",
         });
 
@@ -68,7 +68,7 @@ useEffect(() => {
         const newTotal = qty * Number(item.pricePerKg);
 
         const res = await fetch(
-            `http://localhost:5000/api/sales/${item._id}`,
+            `https://farm-backend-lac.vercel.app/api/sales/${item._id}`,
             {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },

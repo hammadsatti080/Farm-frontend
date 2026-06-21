@@ -13,7 +13,7 @@ export default function CategoryManager() {
   const [categories, setCategories] = useState<Category[]>([]);
 
   const fetchCategories = async () => {
-  const res = await fetch("http://localhost:5000/api/categories");
+  const res = await fetch("https://farm-backend-lac.vercel.app/api/categories");
   const data = await res.json();
 
   setCategories(data.data || data); // IMPORTANT FIX
@@ -21,7 +21,7 @@ export default function CategoryManager() {
 useEffect(() => {
   const loadCategories = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/categories");
+      const res = await fetch("https://farm-backend-lac.vercel.app/api/categories");
       const data = await res.json();
 
       setCategories(data.data || data);
@@ -38,7 +38,7 @@ useEffect(() => {
 
     try {
       if (editId) {
-        await fetch(`http://localhost:5000/api/categories/${editId}`, {
+        await fetch(`https://farm-backend-lac.vercel.app/api/categories/${editId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -48,7 +48,7 @@ useEffect(() => {
 
         setEditId("");
       } else {
-        await fetch("http://localhost:5000/api/categories", {
+        await fetch("https://farm-backend-lac.vercel.app/api/categories", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -70,7 +70,7 @@ useEffect(() => {
   };
 
   const handleDelete = async (id: string) => {
-    await fetch(`http://localhost:5000/api/categories/${id}`, {
+    await fetch(`https://farm-backend-lac.vercel.app/api/categories/${id}`, {
       method: "DELETE",
     });
 

@@ -44,7 +44,7 @@ export default function Inventorycatagory() {
         const fetchTypes = async () => {
             try {
                 const res = await fetch(
-                    "http://localhost:5000/api/inventory-types"
+                    "https://farm-backend-lac.vercel.app/api/inventory-types"
                 );
                 const data = await res.json();
 
@@ -71,7 +71,7 @@ export default function Inventorycatagory() {
 
         if (editId) {
             await fetch(
-                `http://localhost:5000/api/inventory-types/${editId}`,
+                `https://farm-backend-lac.vercel.app/api/inventory-types/${editId}`,
                 {
                     method: "PUT",
                     headers: {
@@ -85,7 +85,7 @@ export default function Inventorycatagory() {
             );
         } else {
             await fetch(
-                "http://localhost:5000/api/inventory-types",
+                "https://farm-backend-lac.vercel.app/api/inventory-types",
                 {
                     method: "POST",
                     headers: {
@@ -106,7 +106,7 @@ export default function Inventorycatagory() {
 
     const fetchTypes = async () => {
         const res = await fetch(
-            "http://localhost:5000/api/inventory-types"
+            "https://farm-backend-lac.vercel.app/api/inventory-types"
         );
         const data = await res.json();
         setTypes(data || []);
@@ -121,7 +121,7 @@ export default function Inventorycatagory() {
         if (!id) return;
 
         await fetch(
-            `http://localhost:5000/api/inventory-types/${id}`,
+            `https://farm-backend-lac.vercel.app/api/inventory-types/${id}`,
             {
                 method: "DELETE",
             }

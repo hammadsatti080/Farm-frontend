@@ -18,7 +18,7 @@ export default function Fetchmilk({ search }: { search: string }) {
 
   useEffect(() => {
     const load = async () => {
-      const res = await fetch("http://localhost:5000/api/milk");
+      const res = await fetch("https://farm-backend-lac.vercel.app/api/milk");
       const data = await res.json();
       setMilkData(data.data || data);
     };
@@ -27,7 +27,7 @@ export default function Fetchmilk({ search }: { search: string }) {
   }, []);
 
   const handleDelete = async (id: string) => {
-    await fetch(`http://localhost:5000/api/milk/${id}`, {
+    await fetch(`https://farm-backend-lac.vercel.app/api/milk/${id}`, {
       method: "DELETE",
     });
 
@@ -38,7 +38,7 @@ export default function Fetchmilk({ search }: { search: string }) {
     const quantity = prompt("Enter quantity", String(item.quantity));
     if (!quantity) return;
 
-    await fetch(`http://localhost:5000/api/milk/${item._id}`, {
+    await fetch(`https://farm-backend-lac.vercel.app/api/milk/${item._id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ quantity: Number(quantity) }),

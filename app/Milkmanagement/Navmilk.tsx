@@ -36,7 +36,7 @@ export default function Navmilk({
 
   useEffect(() => {
     const loadCategories = async () => {
-      const res = await fetch("http://localhost:5000/api/categories");
+      const res = await fetch("https://farm-backend-lac.vercel.app/api/categories");
       const data = await res.json();
       setCategories(data.data || data);
     };
@@ -49,7 +49,7 @@ export default function Navmilk({
   }, [open]);
 
   const handleSubmit = async () => {
-    await fetch("http://localhost:5000/api/milk", {
+    await fetch("https://farm-backend-lac.vercel.app/api/milk", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),

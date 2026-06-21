@@ -40,8 +40,8 @@ export default function Page() {
         const fetchData = async () => {
             try {
                 const [salesRes, catRes] = await Promise.all([
-                    fetch("http://localhost:5000/api/sales"),
-                    fetch("http://localhost:5000/api/categories"),
+                    fetch("https://farm-backend-lac.vercel.app/api/sales"),
+                    fetch("https://farm-backend-lac.vercel.app/api/categories"),
                 ]);
 
                 const salesData = await salesRes.json();

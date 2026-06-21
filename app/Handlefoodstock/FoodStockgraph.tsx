@@ -20,7 +20,7 @@ export default function FoodStockgraph() {
         const fetchData = async () => {
             try {
                 const res = await fetch(
-                    "http://localhost:5000/api/inventory"
+                    "https://farm-backend-lac.vercel.app/api/inventory"
                 );
                 const data = await res.json();
                 setItems(data || []);

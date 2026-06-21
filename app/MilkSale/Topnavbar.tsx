@@ -45,7 +45,7 @@ export default function Topnavbar() {
     }, []);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/categories")
+        fetch("https://farm-backend-lac.vercel.app/api/categories")
             .then((res) => res.json())
             .then((data) => setCategories(data));
     }, []);
@@ -53,7 +53,7 @@ export default function Topnavbar() {
 const refreshStock = useCallback(async () => {
     if (!form.category || !form.type) return;
 
-    const res = await fetch("http://localhost:5000/api/milk");
+    const res = await fetch("https://farm-backend-lac.vercel.app/api/milk");
     const result = await res.json();
 
     const data: MilkStock[] = Array.isArray(result) ? result : result.data;
@@ -174,7 +174,7 @@ useEffect(() => {
         };
 
         try {
-            const res = await fetch("http://localhost:5000/api/sales", {
+            const res = await fetch("https://farm-backend-lac.vercel.app/api/sales", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),

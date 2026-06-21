@@ -24,7 +24,7 @@ export default function VaccinationView() {
         const fetchData = async () => {
             try {
                 const res = await fetch(
-                    "http://localhost:5000/api/Handleanimals"
+                    "https://farm-backend-lac.vercel.app/api/Handleanimals"
                 );
                 const data = await res.json();
                 setAnimals(data || []);

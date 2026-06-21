@@ -29,7 +29,7 @@ export default function ChartDashboard() {
 
   useEffect(() => {
     const load = async () => {
-      const res = await fetch("http://localhost:5000/api/milk");
+      const res = await fetch("https://farm-backend-lac.vercel.app/api/milk");
       const json = await res.json();
       setData(json.data || json);
     };

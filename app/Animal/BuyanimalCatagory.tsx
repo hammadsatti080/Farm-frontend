@@ -12,7 +12,7 @@ export default function BuyanimalCatagory() {
   const [categories, setCategories] = useState<AnimalCategory[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const API = "http://localhost:5000/api/animalcategories";
+  const API = "https://farm-backend-lac.vercel.app/api/animalcategories";
 
   useEffect(() => {
     const loadCategories = async () => {
