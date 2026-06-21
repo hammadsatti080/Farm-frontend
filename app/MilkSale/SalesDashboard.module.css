@@ -1,0 +1,136 @@
+/* container */
+.container {
+  padding: 32px;
+  min-height: 100vh;
+  background: #f4f6fb;
+  font-family: Inter, system-ui, sans-serif;
+  color: #0f172a;
+}
+
+/* header */
+.header {
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 24px;
+}
+
+/* grid */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* ================= UNIFORM CARD STYLE ================= */
+
+.card {
+  background: #ffffff;   /* SAME WHITE for all cards */
+  padding: 22px;
+  border-radius: 16px;
+
+  border: 1px solid #e5e7eb;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* optional top color bar (nice pro touch) */
+.card::before {
+  content: "";
+  display: block;
+  height: 4px;
+  width: 60px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, #6366f1, #22c55e, #f59e0b);
+  opacity: 0.7;
+}
+
+/* text */
+.title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.titleDark {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #111827;
+}
+
+.value {
+  font-size: 32px;
+  font-weight: 900;
+  text-align: left;
+  color: #111827;
+}
+
+.subText {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 6px;
+}
+
+/* category rows */
+.categoryRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.badge {
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 18px;
+  }
+
+  .header {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .cardGrid {
+    grid-template-columns: 1fr; /* stack cards */
+    gap: 14px;
+  }
+
+  .value {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 14px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .value {
+    font-size: 24px;
+  }
+}

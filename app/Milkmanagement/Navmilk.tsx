@@ -108,7 +108,7 @@ export default function Navmilk({
 
             <input
               type="number"
-              placeholder="Quantity"
+              placeholder="Quantity (KG)"
               value={form.quantity}
               onChange={(e) =>
                 setForm({ ...form, quantity: e.target.value })

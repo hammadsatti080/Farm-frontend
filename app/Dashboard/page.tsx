@@ -7,6 +7,14 @@ import MainMilk from "../Milkmanagement/MainMilk";
 import MilkDashboard from "../AdminDashboard/MilkDashboard";
 import Mainfile from "../MilkSale/Mainfile";
 
+
+import BuyanimalCatagory from "../Animal/BuyanimalCatagory";
+import Stockhandler from "../Animal/Stockhandler";
+import Inventorycatagory from "../CategoryManagers/Inventorycatagory";
+import VaccinatedAnimals from "../VaccinatedAnimal/VaccinatedAnimals";
+import Workcatagory from "../CategoryManagers/Workcatagory";
+import Handleteam from "../Team Management/Handleteam";
+
 export default function Page() {
   const [activeTab, setActiveTab] = useState("overview");
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -17,7 +25,9 @@ export default function Page() {
     { id: "overview", label: "Overview" },
     { id: "Milk", label: "Milk" },
     { id: "Sale", label: "Sale" },
-    { id: "reviews", label: "Reviews" },
+    { id: "Stock", label: "Stock" },
+    { id: "Vacine", label: "Vacine" },
+      { id: "team", label: "Team management" },
   ];
 
   const handleChange = (id: string) => {
@@ -65,17 +75,14 @@ export default function Page() {
               <button onClick={() => setSelectedSetting("category")}>
                 Category
               </button>
-              <button onClick={() => setSelectedSetting("profile")}>
-                Profile
+              <button onClick={() => setSelectedSetting("Animal")}>
+                Animal
               </button>
-              <button onClick={() => setSelectedSetting("account")}>
-                Account
+               <button onClick={() => setSelectedSetting("Inventory")}>
+                Inventory
               </button>
-              <button onClick={() => setSelectedSetting("notifications")}>
-                Notifications
-              </button>
-              <button onClick={() => setSelectedSetting("security")}>
-                Security
+                 <button onClick={() => setSelectedSetting("Work")}>
+                Work
               </button>
             </div>
           )}
@@ -118,8 +125,14 @@ export default function Page() {
                   Category
                 </li>
 
-                <li onClick={() => setSelectedSetting("profile")}>
-                  Profile
+                <li onClick={() => setSelectedSetting("Animal")}>
+                  Animal
+                </li>
+                <li onClick={() => setSelectedSetting("Inventory")}>
+                  Inventory
+                </li>
+                   <li onClick={() => setSelectedSetting("Work")}>
+                  Work
                 </li>
 
 
@@ -151,12 +164,23 @@ export default function Page() {
             </>
           )}
 
-          {activeTab === "reviews" && selectedSetting === "" && (
+          {activeTab === "Stock" && selectedSetting === "" && (
             <>
-              <h1>Reviews</h1>
-              <p>Manage reviews here.</p>
+                   <Stockhandler  />
             </>
           )}
+          {activeTab === "Vacine" && selectedSetting === "" && (
+            <>
+                   <VaccinatedAnimals  />
+            </>
+          )}
+          {activeTab === "team" && selectedSetting === "" && (
+            <>
+                   <Handleteam  />
+            </>
+          )}
+        
+
 
           {/* Settings Pages */}
           {selectedSetting === "category" && (
@@ -166,13 +190,25 @@ export default function Page() {
             </>
           )}
 
-          {selectedSetting === "profile" && (
+          {selectedSetting === "Animal" && (
             <>
-              <h1>Profile Settings</h1>
-              <p>Update profile information.</p>
+               <BuyanimalCatagory />
+            
             </>
           )}
-
+          
+ {selectedSetting === "Inventory" && (
+            <>
+               <Inventorycatagory />
+            
+            </>
+          )}
+          {selectedSetting === "Work" && (
+            <>
+               <Workcatagory />
+            
+            </>
+          )}
 
         </main>
       </div>

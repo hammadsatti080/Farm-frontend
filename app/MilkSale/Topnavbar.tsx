@@ -1,59 +1,95 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
+import { useRouter } from "next/navigation";
+import { useState, useEffect, useCallback  } from "react";
+type Category = {
+    _id: string;
+    name: string;
+};
 
 export default function Topnavbar() {
-    const [search, setSearch] = useState("");
+   
     const [open, setOpen] = useState(false);
-    const [categories, setCategories] = useState<{ _id: string; name: string }[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [availableMilk, setAvailableMilk] = useState(0);
 
     const [form, setForm] = useState({
         category: "",
         name: "",
         type: "",
+        milkType: "",
         quantity: 1,
-        quantityType: "kilo",
         pricePerKg: "",
         date: "",
     });
 
-    const [isMobile, setIsMobile] = useState(false);
+    type MilkStock = {
+    _id: string;
+    quantity: number;
+    milkType: string;
+    category:
+        | string
+        | {
+              _id: string;
+              name?: string;
+          };
+};
+
+    const [,setIsMobile] = useState(false);
 
     useEffect(() => {
-        const checkScreen = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
-
-        checkScreen();
-        window.addEventListener("resize", checkScreen);
-
-        return () => window.removeEventListener("resize", checkScreen);
+        const check = () => setIsMobile(window.innerWidth < 768);
+        check();
+        window.addEventListener("resize", check);
+        return () => window.removeEventListener("resize", check);
     }, []);
 
-    // FETCH CATEGORIES
     useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await fetch("http://localhost:5000/api/categories");
-                const data = await res.json();
-                setCategories(data);
-            } catch (error) {
-                console.error("Error fetching categories:", error);
-            }
-        };
-
-        fetchCategories();
+        fetch("http://localhost:5000/api/categories")
+            .then((res) => res.json())
+            .then((data) => setCategories(data));
     }, []);
+
+const refreshStock = useCallback(async () => {
+    if (!form.category || !form.type) return;
+
+    const res = await fetch("http://localhost:5000/api/milk");
+    const result = await res.json();
+
+    const data: MilkStock[] = Array.isArray(result) ? result : result.data;
+
+    const stock = data.find((i: MilkStock) => {
+        const catId =
+            typeof i.category === "object" ? i.category._id : i.category;
+
+        return (
+            String(catId) === String(form.category) &&
+            i.milkType?.toLowerCase() === form.type?.toLowerCase()
+        );
+    });
+
+    setAvailableMilk(stock ? Number(stock.quantity) : 0);
+}, [form.category, form.type]);
+
+useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    refreshStock();
+}, [refreshStock]);
 
     const time = new Date().toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
     });
 
-    const today = new Date().toISOString().split("T")[0];
+    const totalPrice = form.pricePerKg
+        ? form.quantity * Number(form.pricePerKg)
+        : 0;
 
     const increaseQty = () => {
+        if (form.quantity >= availableMilk) {
+            alert(`Only ${availableMilk} KG available`);
+            return;
+        }
         setForm({ ...form, quantity: form.quantity + 1 });
     };
 
@@ -62,367 +98,380 @@ export default function Topnavbar() {
             setForm({ ...form, quantity: form.quantity - 1 });
         }
     };
-
-    // CONVERT QTY
-    const calculatedQuantity =
-        form.quantityType === "liter"
-            ? form.quantity * 10
-            : form.quantity;
-
-    // AUTO TOTAL PRICE
-    const totalPrice =
-        form.pricePerKg
-            ? calculatedQuantity * Number(form.pricePerKg)
-            : 0;
-
-    // SAVE SALE
-    const handleSaveSale = async () => {
-        try {
-            const finalQuantity =
-                form.quantityType === "liter"
-                    ? form.quantity * 10
-                    : form.quantity;
-
-            const finalTotalPrice =
-                finalQuantity * Number(form.pricePerKg);
-
-            const saleData = {
+    /*
+        const handleSaveSale = async () => {
+            const payload = {
                 category: form.category,
-                milkType: form.type,
                 name: form.name,
-                quantity: finalQuantity,
-                quantityType: "kilo",
-                originalQuantity: form.quantity,
-                originalQuantityType: form.quantityType,
+                milkType: form.type,
+                quantity: form.quantity,
                 pricePerKg: Number(form.pricePerKg),
-                totalPrice: finalTotalPrice,
+                totalPrice,
                 date: form.date,
                 time,
             };
-
+    
             const res = await fetch("http://localhost:5000/api/sales", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(saleData),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
             });
-
-            const data = await res.json();
-
+    
+            const result = await res.json();
+    
             if (!res.ok) {
-                throw new Error(data.message || "Failed to save sale");
+                alert(result.error || "Failed to save sale");
+                return;
             }
-
-            alert("Sale Added Successfully!");
-
+    
+            await refreshStock();
+    
+            alert("Sale Added!");
+    
             setForm({
                 category: "",
+                name: "",
                 type: "",
+                milkType: "",
                 quantity: 1,
-                quantityType: "kilo",
                 pricePerKg: "",
                 date: "",
-                name: "", // reset
+            });
+    
+            setOpen(false);
+        };
+    */
+
+    const handleSaveSale = async () => {
+        // 1️⃣ Basic validation
+        if (!form.category || !form.type || !form.name || !form.pricePerKg) {
+            alert("Please fill all required fields");
+            return;
+        }
+
+        // 2️⃣ Stock check (IMPORTANT)
+        if (availableMilk <= 0) {
+            alert("❌ This milk type is out of stock");
+            return;
+        }
+
+        // 3️⃣ Quantity validation
+        if (form.quantity > availableMilk) {
+            alert(`❌ Only ${availableMilk} KG available`);
+            return;
+        }
+
+        // 4️⃣ Final payload
+        const payload = {
+            category: form.category,
+            name: form.name,
+            milkType: form.type,
+            quantity: form.quantity,
+            pricePerKg: Number(form.pricePerKg),
+            totalPrice,
+            date: form.date,
+            time,
+        };
+
+        try {
+            const res = await fetch("http://localhost:5000/api/sales", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+
+            const result = await res.json();
+
+            if (!res.ok) {
+                alert(result.error || "Failed to save sale");
+                return;
+            }
+
+            // 5️⃣ Refresh stock after sale
+            await refreshStock();
+
+            alert("✅ Sale Added Successfully!");
+
+            // 6️⃣ Reset form
+            setForm({
+                category: "",
+                name: "",
+                type: "",
+                milkType: "",
+                quantity: 1,
+                pricePerKg: "",
+                date: "",
             });
 
             setOpen(false);
         } catch (error) {
             console.error(error);
-            alert("Error saving sale");
+            alert("Something went wrong!");
         }
     };
 
+
+  const router = useRouter();
+
+  const handleButton = () => {
+    router.push("/Salegraph");
+  };
     return (
         <>
-            {/* NAVBAR */}
-            <nav
-                style={{
-                    display: "flex",
-                    flexDirection: isMobile ? "column" : "row",
-                    gap: "15px",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "15px 20px",
-                }}
-            >
-                <input
-                    type="text"
-                    placeholder="Search milk..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    style={{
-                        width: isMobile ? "100%" : "350px",
-                        padding: "12px",
-                        borderRadius: "12px",
-                        border: "none",
-                        outline: "none",
-                        fontSize: "15px",
-                    }}
-                />
+            {/* TOP BAR */}
+            <div className="navbar">
+                
 
-                <button
-                    onClick={() => setOpen(true)}
-                    style={{
-                        background: "#22c55e",
-                        color: "#fff",
-                        border: "none",
-                        padding: "12px 25px",
-                        borderRadius: "12px",
-                        fontWeight: "bold",
-                        cursor: "pointer",
-                        fontSize: "15px",
-                        boxShadow: "0 4px 12px rgba(34,197,94,.4)",
-                    }}
-                >
-                    + Sale
+                <button className="addBtn" onClick={() => setOpen(true)}>
+                    + Add Sale
                 </button>
-            </nav>
+                 <button className="addBtn" onClick={handleButton}>
+              Go to Sale Graph
+             </button>
+            </div>
 
             {/* MODAL */}
             {open && (
-                <div
-                    onClick={() => setOpen(false)}
-                    style={{
-                        position: "fixed",
-                        inset: 0,
-                        background: "rgba(0,0,0,.55)",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        padding: "20px",
-                        zIndex: 999,
-                    }}
-                >
-                    <div
-                        onClick={(e) => e.stopPropagation()}
-                        style={{
-                            width: "100%",
-                            maxWidth: "500px",
-                            background: "#fff",
-                            borderRadius: "20px",
-                            padding: "25px",
+                <div className="overlay" onClick={() => setOpen(false)}>
+                    <div className="modal" onClick={(e) => e.stopPropagation()}>
+                        <h2 className="title">🧾 Add New Sale</h2>
 
-                            boxShadow: "0 10px 30px rgba(0,0,0,.25)",
-                            marginTop: "70px",
-                            /* ✅ SCROLL FIX */
-                            maxHeight: "80vh",
-                            overflowY: "auto",
-                        }}
-                    >
-                        <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
-                            🛒 Add Sale
-                        </h2>
-                        {/* ✅ NAME FIELD (NEW) */}
-                        <input
-                            type="text"
-                            placeholder="Customer / Sale Name"
-                            style={inputStyle}
-                            value={form.name}
-                            onChange={(e) =>
-                                setForm({ ...form, name: e.target.value })
-                            }
-                        />
-                        {/* CATEGORY */}
-                        <select
-                            style={inputStyle}
-                            value={form.category}
-                            onChange={(e) =>
-                                setForm({ ...form, category: e.target.value })
-                            }
-                        >
-                            <option value="">Select Category</option>
-                            {categories.map((c) => (
-                                <option key={c._id} value={c._id}>
-                                    {c.name}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="grid">
+                            <input
+                                placeholder="Customer Name"
+                                value={form.name}
+                                onChange={(e) =>
+                                    setForm({ ...form, name: e.target.value })
+                                }
+                            />
 
-                        {/* MILK TYPE */}
-                        <select
-                            style={inputStyle}
-                            value={form.type}
-                            onChange={(e) =>
-                                setForm({ ...form, type: e.target.value })
-                            }
-                        >
-                            <option value="">Select Milk Type</option>
-                            <option>Cow</option>
-                            <option>Buffalo</option>
-                            <option>Goat</option>
-                        </select>
-
-
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "12px",
-                                marginBottom: "10px",
-                            }}
-                        >
-                            <button onClick={decreaseQty} style={qtyBtnRed}>
-                                −
-                            </button>
-
-                            <div
-                                style={{
-                                    width: "140px",
-                                    textAlign: "center",
-                                    padding: "12px",
-                                    background: "#f8fafc",
-                                    borderRadius: "10px",
-                                    fontWeight: "bold",
-                                }}
+                            <select
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        category: e.target.value,
+                                    })
+                                }
                             >
-                                {form.quantity} {form.quantityType}
-                            </div>
+                                <option value="">Select Category</option>
+                                {categories.map((c) => (
+                                    <option key={c._id} value={c._id}>
+                                        {c.name}
+                                    </option>
+                                ))}
+                            </select>
 
-                            <button onClick={increaseQty} style={qtyBtnGreen}>
-                                +
-                            </button>
+                            <select
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        type: e.target.value,
+                                        milkType: e.target.value,
+                                    })
+                                }
+                            >
+                                <option value="">Select Type</option>
+                                <option>Cow</option>
+                                <option>Buffalo</option>
+                                <option>Goat</option>
+                            </select>
+
+                            <input
+                                type="number"
+                                placeholder="Price per KG"
+                                value={form.pricePerKg}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        pricePerKg: e.target.value,
+                                    })
+                                }
+                            />
+
+                            <input
+                                type="date"
+                                value={form.date}
+                                onChange={(e) =>
+                                    setForm({ ...form, date: e.target.value })
+                                }
+                            />
                         </div>
 
-                        {/* QUANTITY TYPE */}
-                        <select
-                            style={inputStyle}
-                            value={form.quantityType}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    quantityType: e.target.value,
-                                })
-                            }
-                        >
-                            <option value="kilo">Kilo</option>
-                            <option value="liter">Liter</option>
-                        </select>
-
-                        {/* PRICE PER KG */}
-                        <input
-                            type="number"
-                            placeholder="Price per KG"
-                            style={inputStyle}
-                            value={form.pricePerKg}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    pricePerKg: e.target.value,
-                                })
-                            }
-                        />
-
-                        {/* AUTO TOTAL PRICE */}
-                        <div
-                            style={{
-                                marginTop: "10px",
-                                background: "#f1f5f9",
-                                padding: "12px",
-                                borderRadius: "10px",
-                                textAlign: "center",
-                                fontWeight: "bold",
-                            }}
-                        >
-                            💰 Total Price: {totalPrice}
+                        {/* STOCK INFO */}
+                        <div className="stockBox">
+                            🥛 Available Stock:{" "}
+                            <b>{availableMilk} KG</b>
                         </div>
 
-                        {/* DATE */}
-                        <input
-                            type="date"
-                            min={today}
-                            style={inputStyle}
-                            value={form.date}
-                            onChange={(e) =>
-                                setForm({ ...form, date: e.target.value })
-                            }
-                        />
-
-                        {/* TIME */}
-                        <div
-                            style={{
-                                marginTop: "10px",
-                                background: "#eff6ff",
-                                padding: "12px",
-                                borderRadius: "10px",
-                                textAlign: "center",
-                                fontWeight: "bold",
-                                color: "#2563eb",
-                            }}
-                        >
-                            ⏰ {time}
+                        {/* QUANTITY */}
+                        <div className="qtyBox">
+                            <button onClick={decreaseQty}>−</button>
+                            <span>{form.quantity}</span>
+                            <button onClick={increaseQty}>+</button>
                         </div>
 
-                        {/* BUTTONS */}
-                        <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+                        {/* TOTAL */}
+                        <div className="total">
+                            💰 Total: <b>{totalPrice}</b>
+                        </div>
+
+                        {/* ACTIONS */}
+                        <div className="actions">
                             <button
+                                className="save"
                                 onClick={handleSaveSale}
-                                style={{
-                                    flex: 1,
-                                    background: "#22c55e",
-                                    color: "#fff",
-                                    border: "none",
-                                    padding: "14px",
-                                    borderRadius: "12px",
-                                    fontWeight: "bold",
-                                    cursor: "pointer",
-                                }}
+                                disabled={availableMilk <= 0}
                             >
-                                Save Sale
+                                Save
                             </button>
 
                             <button
+                                className="close"
                                 onClick={() => setOpen(false)}
-                                style={{
-                                    flex: 1,
-                                    background: "#ef4444",
-                                    color: "#fff",
-                                    border: "none",
-                                    padding: "14px",
-                                    borderRadius: "12px",
-                                    fontWeight: "bold",
-                                    cursor: "pointer",
-                                }}
                             >
-                                Close
+                                Cancel
                             </button>
                         </div>
                     </div>
-
                 </div>
             )}
+
+            {/* STYLES */}
+            <style jsx>{`
+              .navbar {
+             
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px;
+
+    background: #ffffff;
+    border-bottom: 1px solid #eee;
+  
+border-radius : 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+                .search {
+                    width: 50%;
+                    padding: 10px 12px;
+                    border-radius: 8px;
+                    border: 1px solid #ddd;
+                    outline: none;
+                }
+
+                .addBtn {
+                    background: #16a34a;
+                    color: white;
+                    border: none;
+                    padding: 10px 14px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: 600;
+                }
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+
+    /* 👇 IMPORTANT: blur effect */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    /* 👇 ensure it's above everything */
+    z-index: 999;
+}
+
+.modal {
+    background: white;
+    width: 420px;
+    max-width: 100%;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+    /* 👇 ensure above overlay blur layer */
+    z-index: 1000;
+       margin-top: 75px;
+  
+}
+
+                .title {
+                    margin-bottom: 15px;
+                }
+
+                .grid {
+                    display: grid;
+                    gap: 10px;
+                }
+
+                input,
+                select {
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 8px;
+                    outline: none;
+                }
+
+                .stockBox {
+                    margin-top: 10px;
+                    padding: 10px;
+                    background: #f0fdf4;
+                    border-radius: 8px;
+                }
+
+                .qtyBox {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 15px;
+                    margin: 15px 0;
+                }
+
+                .qtyBox button {
+                    width: 35px;
+                    height: 35px;
+                    border-radius: 50%;
+                    border: none;
+                    background: #eee;
+                    font-size: 18px;
+                    cursor: pointer;
+                }
+
+                .total {
+                    text-align: center;
+                    margin-bottom: 15px;
+                }
+
+                .actions {
+                    display: flex;
+                    gap: 10px;
+                }
+
+                .save {
+                    flex: 1;
+                    background: #16a34a;
+                    color: white;
+                    border: none;
+                    padding: 10px;
+                    border-radius: 8px;
+                }
+
+                .close {
+                    flex: 1;
+                    background: #ef4444;
+                    color: white;
+                    border: none;
+                    padding: 10px;
+                    border-radius: 8px;
+                }
+            `}</style>
         </>
     );
 }
-
-// STYLES
-const inputStyle = {
-    width: "100%",
-    padding: "12px",
-    borderRadius: "12px",
-    border: "1px solid #dbeafe",
-    marginBottom: "12px",
-    fontSize: "15px",
-};
-
-const qtyBtnGreen = {
-    width: "45px",
-    height: "45px",
-    border: "none",
-    borderRadius: "50%",
-    background: "#22c55e",
-    color: "#fff",
-    fontSize: "22px",
-    cursor: "pointer",
-};
-
-const qtyBtnRed = {
-    width: "45px",
-    height: "45px",
-    border: "none",
-    borderRadius: "50%",
-    background: "#ef4444",
-    color: "#fff",
-    fontSize: "22px",
-    cursor: "pointer",
-};

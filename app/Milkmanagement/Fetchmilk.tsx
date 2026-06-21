@@ -104,7 +104,7 @@ export default function Fetchmilk({ search }: { search: string }) {
           <tfoot>
             <tr>
               <td colSpan={3}>Total</td>
-              <td colSpan={4}>{total} L</td>
+              <td colSpan={4}>{total} kg</td>
             </tr>
           </tfoot>
         </table>
@@ -138,7 +138,7 @@ export default function Fetchmilk({ search }: { search: string }) {
         ))}
 
         <div className="total-box">
-          Total Milk: <b>{total} L</b>
+          Total Milk: <b>{total} kg</b>
         </div>
       </div>
     </div>

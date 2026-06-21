@@ -1,142 +1,248 @@
-/* NAVBAR BACKGROUND */
+/* ================= NAVBAR ================= */
+
 .navbar {
-  background: linear-gradient(135deg, #16a34a, #22c55e);
-  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
   position: sticky;
   top: 0;
   z-index: 1000;
+
+  background: #ffffff;   /* PURE WHITE */
+  border-bottom: 1px solid #e5e7eb;
 }
 
-/* MAIN CONTAINER */
 .navbar-container {
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
+  margin: auto;
 
-/* INNER FLEX */
-.navbar-inner {
-  height: 70px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  padding: 14px 20px;
 }
 
-/* LOGO */
+/* ================= LOGO ================= */
+
 .logo {
   display: flex;
   align-items: center;
-  font-size: 22px;
-  font-weight: bold;
-  color: white;
+  gap: 8px;
+
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
   text-decoration: none;
-  padding-top: 40px;
-  gap: 6px;
 }
-/* DESKTOP WRAPPER */
+
+/* ================= DESKTOP ================= */
+
 .desktop-wrapper {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 100%;
+  gap: 24px;
 }
 
-/* LEFT LINKS */
 .nav-links {
   display: flex;
-  gap: 20px;
-  align-items: center;
-  margin-left: 30px;
+  gap: 18px;
 }
 
-/* LINKS */
 .nav-link {
-  color: white;
-  text-decoration: none;
+  font-size: 14px;
   font-weight: 500;
-  opacity: 0.9;
-  position: relative;
-  transition: all 0.3s ease;
+
+  color: #111827;
+  text-decoration: none;
+
+  padding: 6px 10px;
+  border-radius: 8px;
+
+  transition: all 0.2s ease;
 }
 
-/* Hover effect */
+/* hover = soft white card effect */
 .nav-link:hover {
-  opacity: 1;
+  background: #f3f4f6;
+  color: #000;
+}
+
+/* ================= BUTTON ================= */
+
+.nav-button {
+  background: #111827;
+  color: #ffffff;
+
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+  background: #2563eb;
   transform: translateY(-2px);
 }
 
-/* Animated underline */
-.nav-link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 0%;
-  height: 2px;
-  background: white;
-  transition: 0.3s ease;
-}
+/* ================= MOBILE BUTTON ================= */
 
-.nav-link:hover::after {
-  width: 100%;
-}
-
-/* BUTTON */
-.nav-button {
-  background: white;
-  color: #16a34a;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 10px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-}
-
-/* Hover */
-.nav-button:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  background: #f0fdf4;
-}
-
-/* Click effect */
-.nav-button:active {
-  transform: scale(0.95);
-}
-/* MOBILE BUTTON */
 .mobile-btn {
-  font-size: 28px;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
   display: none;
+
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+
+  padding: 8px 10px;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  color: #111827;
+
+  transition: all 0.2s ease;
 }
 
-/* MOBILE MENU */
-.mobile-menu {
+.mobile-btn:hover {
+  background: #e5e7eb;
+  transform: scale(1.05);
+}
+
+/* ================= MOBILE MENU MODAL ================= */
+
+/* full-screen blurred backdrop, sits above everything */
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+
+  background: rgba(17, 24, 39, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  animation: fadeIn 0.2s ease;
+}
+
+/* the actual modal card */
+.mobile-menu-modal {
+  width: 100%;
+  max-width: 340px;
+
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+
+  padding: 18px;
+
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  padding: 20px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  gap: 14px;
+
+  animation: popIn 0.22s ease;
 }
 
-/* MOBILE LINKS */
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.mobile-menu-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.mobile-menu-close {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  color: #111827;
+
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-close:hover {
+  background: #e5e7eb;
+}
+
+.mobile-menu-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* MOBILE LINKS = CARD STYLE */
 .mobile-link {
-  color: white;
+  padding: 10px 12px;
+  border-radius: 10px;
+
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+
+  color: #111827;
   text-decoration: none;
-  transition: 0.3s ease;
+
+  font-size: 15px;
+
+  transition: all 0.2s ease;
 }
 
 .mobile-link:hover {
-  transform: translateX(8px);
-  opacity: 0.8;
+  background: #f3f4f6;
 }
 
-/* RESPONSIVE */
+/* mobile button */
+.nav-button.mobile {
+  width: 100%;
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-overlay,
+  .mobile-menu-modal {
+    animation: none;
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+
 @media (max-width: 768px) {
   .desktop-wrapper {
     display: none;
@@ -145,22 +251,4 @@
   .mobile-btn {
     display: block;
   }
-}
-
-@media (min-width: 769px) {
-  .mobile-menu {
-    display: none;
-  }
-}
-
-
-.nav-text {
-  display: inline-block;
-  transition: all 0.3s ease;
-  font-weight: bold;
-  color: white;
-}
-
-.nav-link:hover .nav-text {
-  transform: translateY(-2px);
 }

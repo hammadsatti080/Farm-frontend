@@ -1,10 +1,7 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
-import "./salesTable.css";
-
-/* ================= TYPES ================= */
-
+import { useEffect, useState } from "react";
+import { useCallback } from "react";
 type Category = {
     _id: string;
     name: string;
@@ -12,349 +9,524 @@ type Category = {
 
 type Sale = {
     _id: string;
-    name?: string;
-    category?: Category;
+    name: string;
+    quantity: number;
+    pricePerKg: number;
+    totalPrice: number;
+    date?: string;
     milkType?: string;
-    quantity?: number;
-    pricePerKg?: number;
-    totalPrice?: number;
-    date?: string;
+    category?: Category | string;
 };
-
-type Filters = {
-    type?: string;
-    date?: string;
-};
-
-export default function SalesTable({ filters }: { filters?: Filters }) {
+export default function SalesTable() {
     const [sales, setSales] = useState<Sale[]>([]);
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string>("");
 
-    const [isMobile, setIsMobile] = useState(false);
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [milkFilter, setMilkFilter] = useState("");
 
-    const [editOpen, setEditOpen] = useState(false);
-    const [editData, setEditData] = useState<Sale | null>(null);
 
-    /* ================= SCREEN ================= */
-    useEffect(() => {
-        const check = () => setIsMobile(window.innerWidth < 768);
-        check();
-        window.addEventListener("resize", check);
-        return () => window.removeEventListener("resize", check);
-    }, []);
+const fetchSales = useCallback(async (): Promise<void> => {
+    try {
+        const res = await fetch("http://localhost:5000/api/sales");
+        const data = await res.json();
 
-    /* ================= FETCH SALES ================= */
-    useEffect(() => {
-        const fetchSales = async () => {
-            try {
-                const res = await fetch("http://localhost:5000/api/sales");
-                const data: Sale[] = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed");
 
-                const clean = Array.isArray(data)
-                    ? data.filter((i) => i && i.category)
-                    : [];
-
-                setSales(clean);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-
-        fetchSales();
-    }, []);
-
-    /* ================= FETCH CATEGORIES ================= */
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await fetch("http://localhost:5000/api/categories");
-                const data: Category[] = await res.json();
-                setCategories(data);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-
-        fetchCategories();
-    }, []);
-
-    /* ================= FILTERED DATA (FIXED - NO useEffect) ================= */
-    const filteredSales = useMemo(() => {
-        let result = [...sales];
-
-        if (filters?.type) {
-            result = result.filter((s) => s.milkType === filters.type);
+        setSales(data.data || []);
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            setError(err.message);
+        } else {
+            setError("Something went wrong");
         }
-
-        if (filters?.date) {
-            result = result.filter((s) => s.date === filters.date);
-        }
-
-        if (selectedCategory) {
-            result = result.filter(
-                (s) => s.category?._id === selectedCategory
-            );
-        }
-
-        return result;
-    }, [sales, filters, selectedCategory]);
-
-    /* ================= DELETE ================= */
-    const handleDelete = async (id: string) => {
-        try {
-            await fetch(`http://localhost:5000/api/sales/${id}`, {
-                method: "DELETE",
-            });
-
-            setSales((prev) => prev.filter((s) => s._id !== id));
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    /* ================= EDIT ================= */
-    const handleEditOpen = (item: Sale) => {
-        setEditData(item);
-        setEditOpen(true);
-    };
-
-    const handleUpdate = async () => {
-        if (!editData) return;
-
-        try {
-            const res = await fetch(
-                `http://localhost:5000/api/sales/${editData._id}`,
-                {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(editData),
-                }
-            );
-
-            const updated: Sale = await res.json();
-
-            setSales((prev) =>
-                prev.map((s) => (s._id === updated._id ? updated : s))
-            );
-
-            setEditOpen(false);
-            setEditData(null);
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    /* ================= EMPTY STATE ================= */
-    if (!filteredSales.length) {
-        return (
-            <p style={{ padding: "10px", color: "#64748b" }}>
-                No sales found
-            </p>
-        );
+    } finally {
+        setLoading(false);
     }
+}, []);
+
+useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchSales();
+}, [fetchSales]);
+
+    const handleDelete = async (id: string) => {
+        await fetch(`http://localhost:5000/api/sales/${id}`, {
+            method: "DELETE",
+        });
+
+        setSales((prev) => prev.filter((i) => i._id !== id));
+    };
+
+    const handleEdit = async (item: Sale): Promise<void> => {
+        const newQty = prompt("Enter new quantity", String(item.quantity));
+        if (!newQty) return;
+
+        const qty = Number(newQty);
+        if (isNaN(qty)) return;
+
+        const newTotal = qty * Number(item.pricePerKg);
+
+        const res = await fetch(
+            `http://localhost:5000/api/sales/${item._id}`,
+            {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    quantity: qty,
+                    totalPrice: newTotal,
+                }),
+            }
+        );
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.error || "Update failed");
+            return;
+        }
+
+        await fetchSales(); // ✅ now works
+    };
+
+  const filtered = sales.filter((item) => {
+    const categoryName =
+        typeof item.category === "object"
+            ? item.category?.name
+            : item.category;
 
     return (
-        <>
-            {/* ================= TABLE ================= */}
-            {!isMobile && (
-                <div className="table-container">
-                    <table className="sales-table">
+        (categoryFilter === "" ||
+            categoryName === categoryFilter) &&
+        (milkFilter === "" || item.milkType === milkFilter)
+    );
+});
 
-                        {/* ================= HEADER WITH CATEGORY DROPDOWN ================= */}
-                        <thead>
-                            <tr>
-                                <th>Name</th>
+    const categories = [
+    ...new Set(
+        sales.map((s) =>
+            typeof s.category === "object"
+                ? s.category?.name
+                : s.category
+        )
+    ),
+].filter(Boolean);
+    const milkTypes = ["Cow", "Buffalo", "Goat"];
 
-                                <th>
-                                    <select
-                                        value={selectedCategory}
-                                        onChange={(e) =>
-                                            setSelectedCategory(e.target.value)
-                                        }
-                                        style={{
-                                            padding: "6px",
-                                            borderRadius: "6px",
-                                            fontSize: "12px",
-                                        }}
-                                    >
-                                        <option value="">All Categories</option>
-                                        {categories.map((c) => (
-                                            <option key={c._id} value={c._id}>
-                                                {c.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </th>
+    if (loading) return <p className="status">Loading...</p>;
+    if (error) return <p className="status error">{error}</p>;
 
-                                <th>Type</th>
-                                <th>Qty</th>
-                                <th>Price</th>
-                                <th>Total</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
+    return (
+        <div className="page">
+            <div className="card">
+                <div className="headerRow">
+                    <h2 className="title">📊 Sales Dashboard</h2>
 
-                        {/* ================= BODY ================= */}
-                        <tbody>
-                            {filteredSales.map((s) => (
-                                <tr key={s._id}>
-                                    <td>{s.name || "-"}</td>
-                                    <td>{s.category?.name}</td>
-                                    <td>{s.milkType}</td>
-                                    <td>{s.quantity}</td>
-                                    <td>{s.pricePerKg}</td>
-                                    <td>{s.totalPrice}</td>
-                                    <td>{s.date}</td>
-
-                                    <td >
-                                        <div style={{ display: "flex", gap: "10px" }}>
-                                            <button onClick={() => handleEditOpen(s)} style={editBtn}>
-                                                Edit
-                                            </button>
-
-                                            <button onClick={() => handleDelete(s._id)} style={deleteBtn}>
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                    {/* Filters: shared between desktop (inline in table head) and mobile (own bar) */}
+                    <div className="filterBar">
+                        <select
+                            value={categoryFilter}
+                            onChange={(e) => setCategoryFilter(e.target.value)}
+                        >
+                            <option value="">📦 Category</option>
+                            {categories.map((c, i) => (
+                                <option key={i} value={c}>
+                                    {c}
+                                </option>
                             ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                        </select>
 
-            {/* ================= MOBILE ================= */}
-            {isMobile && (
-                <div className="sales-cards">
-                    {filteredSales.map((s) => (
-                        <div key={s._id} className="sales-card">
-                            <h3>{s.name || "No Name"}</h3>
-
-                            <p>🏷 Category: {s.category?.name}</p>
-                            <p>🐄 Type: {s.milkType}</p>
-                            <p>⚖️ Qty: {s.quantity}</p>
-                            <p>💰 Price: {s.pricePerKg}</p>
-                            <p>🧾 Total: {s.totalPrice}</p>
-                            <p>📅 Date: {s.date}</p>
-
-                            <div style={{ display: "flex", gap: "10px" }}>
-                                <button onClick={() => handleEditOpen(s)} style={editBtn}>
-                                    Edit
-                                </button>
-
-                                <button onClick={() => handleDelete(s._id)} style={deleteBtn}>
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-
-            {/* ================= EDIT MODAL ================= */}
-            {editOpen && editData && (
-                <div style={modalBg} onClick={() => setEditOpen(false)}>
-                    <div style={modal} onClick={(e) => e.stopPropagation()}>
-                        <h2>Edit Sale</h2>
-
-                        <input
-                            value={editData.name || ""}
-                            onChange={(e) =>
-                                setEditData({ ...editData, name: e.target.value })
-                            }
-                            style={input}
-                            placeholder="Name"
-                        />
-
-                        <input
-                            value={editData.quantity || ""}
-                            onChange={(e) =>
-                                setEditData({
-                                    ...editData,
-                                    quantity: Number(e.target.value),
-                                })
-                            }
-                            style={input}
-                            placeholder="Quantity"
-                        />
-
-                        <input
-                            value={editData.pricePerKg || ""}
-                            onChange={(e) =>
-                                setEditData({
-                                    ...editData,
-                                    pricePerKg: Number(e.target.value),
-                                })
-                            }
-                            style={input}
-                            placeholder="Price"
-                        />
-
-                        <div style={{ display: "flex", gap: "10px" }}>
-                            <button onClick={handleUpdate} style={saveBtn}>
-                                Update
-                            </button>
-
-                            <button onClick={() => setEditOpen(false)} style={deleteBtn}>
-                                Cancel
-                            </button>
-                        </div>
+                        <select
+                            value={milkFilter}
+                            onChange={(e) => setMilkFilter(e.target.value)}
+                        >
+                            <option value="">🥛 Milk Type</option>
+                            {milkTypes.map((m, i) => (
+                                <option key={i} value={m}>
+                                    {m}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                 </div>
-            )}
-        </>
+
+                {filtered.length === 0 ? (
+                    <p className="empty">No sales match these filters.</p>
+                ) : (
+                    <>
+                        {/* DESKTOP / TABLET TABLE */}
+                        <div className="tableWrap">
+                            <table>
+                                <thead>
+                                    <tr className="headRow">
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Milk Type</th>
+                                        <th>Qty</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {filtered.map((item) => (
+                                        <tr key={item._id}>
+                                            <td>{item.name}</td>
+                                            <td>
+    {typeof item.category === "object"
+        ? item.category?.name
+        : item.category || "-"}
+</td>
+                                            <td>{item.milkType}</td>
+                                            <td>{item.quantity}</td>
+                                            <td>{item.pricePerKg}</td>
+                                            <td>{item.totalPrice}</td>
+                                            <td>{item.date}</td>
+                                            <td>
+                                                <div className="btns">
+                                                    <button
+                                                        className="edit"
+                                                        onClick={() => handleEdit(item)}
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        className="delete"
+                                                        onClick={() => handleDelete(item._id)}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* MOBILE CARDS */}
+                        <div className="cards">
+                            {filtered.map((item) => (
+                                <div key={item._id} className="mobileCard">
+                                    <div className="top">
+                                        <h3>{item.name}</h3>
+                                        <span className="badge">{item.milkType}</span>
+                                    </div>
+
+                                    <div className="grid">
+                                        <div>
+                                            <p className="label">Category</p>
+                                           <p>
+    {typeof item.category === "object"
+        ? item.category?.name
+        : item.category || "-"}
+</p>
+                                        </div>
+                                        <div>
+                                            <p className="label">Quantity</p>
+                                            <p>{item.quantity} KG</p>
+                                        </div>
+                                        <div>
+                                            <p className="label">Price / KG</p>
+                                            <p>{item.pricePerKg}</p>
+                                        </div>
+                                        <div>
+                                            <p className="label">Total</p>
+                                            <p className="total">{item.totalPrice}</p>
+                                        </div>
+                                    </div>
+
+                                    <p className="date">📅 {item.date}</p>
+
+                                    <div className="btns">
+                                        <button
+                                            className="edit"
+                                            onClick={() => handleEdit(item)}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="delete"
+                                            onClick={() => handleDelete(item._id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                )}
+            </div>
+
+            <style jsx>{`
+                .page {
+                    background: #f4f6fb;
+                    min-height: 100vh;
+                    padding: 24px;
+                    font-family: sans-serif;
+                }
+
+                .card {
+                    background: white;
+                    border-radius: 16px;
+                    padding: 20px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+                }
+
+                .headerRow {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                    margin-bottom: 16px;
+                }
+
+                .title {
+                    font-size: 22px;
+                    font-weight: 600;
+                    margin: 0;
+                }
+
+                .status {
+                    padding: 40px;
+                    text-align: center;
+                    font-family: sans-serif;
+                    color: #666;
+                }
+
+                .status.error {
+                    color: #ef4444;
+                }
+
+                .empty {
+                    text-align: center;
+                    padding: 30px 10px;
+                    color: #888;
+                    font-size: 14px;
+                }
+
+                .filterBar {
+                    display: flex;
+                    gap: 10px;
+                    flex-wrap: wrap;
+                }
+
+                .filterBar select {
+                    padding: 8px 10px;
+                    border-radius: 8px;
+                    border: 1px solid #ddd;
+                    background: #fff;
+                    cursor: pointer;
+                    font-size: 13px;
+                    min-width: 130px;
+                }
+
+                /* ===== DESKTOP / TABLET TABLE ===== */
+                .tableWrap {
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    min-width: 700px;
+                }
+
+                thead {
+                    background: #f8fafc;
+                }
+
+                th {
+                    padding: 12px;
+                    text-align: left;
+                    font-size: 14px;
+                    font-weight: 600;
+                    border-bottom: 1px solid #eee;
+                    white-space: nowrap;
+                }
+
+                td {
+                    padding: 12px;
+                    border-bottom: 1px solid #f1f1f1;
+                    font-size: 14px;
+                }
+
+                tr:hover {
+                    background: #fafafa;
+                }
+
+                .btns {
+                    display: flex;
+                    gap: 6px;
+                }
+
+                .edit {
+                    background: #facc15;
+                    border: none;
+                    padding: 6px 10px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 12px;
+                }
+
+                .delete {
+                    background: #ef4444;
+                    border: none;
+                    padding: 6px 10px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    color: white;
+                    font-size: 12px;
+                }
+
+                /* ===== MOBILE CARDS (hidden by default, shown under breakpoint) ===== */
+                .cards {
+                    display: none;
+                    flex-direction: column;
+                    gap: 12px;
+                    margin-top: 4px;
+                }
+
+                .mobileCard {
+                    background: #fff;
+                    border-radius: 16px;
+                    padding: 14px;
+                    border: 1px solid #eee;
+                    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+                }
+
+                .top {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 10px;
+                }
+
+                .top h3 {
+                    font-size: 16px;
+                    font-weight: 600;
+                    margin: 0;
+                }
+
+                .badge {
+                    background: #e0f2fe;
+                    color: #0369a1;
+                    font-size: 12px;
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                }
+
+                .grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 10px;
+                    margin-bottom: 10px;
+                }
+
+                .grid p {
+                    margin: 0;
+                }
+
+                .label {
+                    font-size: 11px;
+                    color: #777;
+                    margin-bottom: 2px;
+                }
+
+                .total {
+                    font-weight: 600;
+                    color: #16a34a;
+                }
+
+                .date {
+                    font-size: 12px;
+                    color: #666;
+                    margin: 0 0 10px;
+                }
+
+                .mobileCard .btns {
+                    gap: 8px;
+                }
+
+                .mobileCard .edit {
+                    flex: 1;
+                    padding: 8px;
+                    border-radius: 10px;
+                    font-size: 13px;
+                    text-align: center;
+                }
+
+                .mobileCard .delete {
+                    flex: 1;
+                    padding: 8px;
+                    border-radius: 10px;
+                    font-size: 13px;
+                    text-align: center;
+                }
+
+                /* ===== BREAKPOINTS ===== */
+
+                /* Tablet: keep table but tighten padding so it fits better */
+                @media (max-width: 1024px) {
+                    table {
+                        min-width: 640px;
+                    }
+
+                    th,
+                    td {
+                        padding: 10px 8px;
+                        font-size: 13px;
+                    }
+                }
+
+                /* Mobile: swap table for cards, move filters into their own row */
+                @media (max-width: 768px) {
+                    .page {
+    padding-right: 40px;
+}
+                    .card {
+                        padding: 16px;
+                        border-radius: 14px;
+                    }
+
+                    .title {
+                        font-size: 19px;
+                    }
+
+                    .headerRow {
+                        flex-direction: column;
+                        align-items: stretch;
+                    }
+
+                    .filterBar {
+                        width: 100%;
+                    }
+
+                    .filterBar select {
+                        flex: 1;
+                        min-width: 0;
+                    }
+
+                    .tableWrap {
+                        display: none;
+                    }
+
+                    .cards {
+                        display: flex;
+                    }
+                }
+
+                @media (max-width: 420px) {
+                    .grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            `}</style>
+        </div>
     );
 }
-
-/* ================= STYLES ================= */
-
-const editBtn: React.CSSProperties = {
-    background: "#3b82f6",
-    color: "#fff",
-    border: "none",
-    padding: "6px 10px",
-    borderRadius: "6px",
-    cursor: "pointer",
-};
-
-const deleteBtn: React.CSSProperties = {
-    background: "#ef4444",
-    color: "#fff",
-    border: "none",
-    padding: "6px 10px",
-    borderRadius: "6px",
-    cursor: "pointer",
-};
-
-const saveBtn: React.CSSProperties = {
-    background: "#22c55e",
-    color: "#fff",
-    border: "none",
-    padding: "10px",
-    flex: 1,
-};
-
-const input: React.CSSProperties = {
-    width: "100%",
-    padding: "10px",
-    marginBottom: "10px",
-};
-
-const modalBg: React.CSSProperties = {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-};
-
-const modal: React.CSSProperties = {
-    background: "#fff",
-    padding: "20px",
-    borderRadius: "10px",
-    width: "400px",
-};
