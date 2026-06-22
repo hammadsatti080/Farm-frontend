@@ -120,7 +120,7 @@ export default function Hero() {
             }}
           >
             Experience the beauty of nature and sustainable farming. Enjoy
-            fresh organic products, healthy livestock, and a peaceful rural
+            fresh organic  products, healthy livestock, and a peaceful rural
             environment where quality, care, and tradition come together.
             From farm-fresh produce to unforgettable countryside experiences,
             we bring nature closer to you.

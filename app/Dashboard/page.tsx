@@ -16,6 +16,8 @@ import Workcatagory from "../CategoryManagers/Workcatagory";
 import Handleteam from "../Team Management/Handleteam";
 import Attendance from "../Attendence/Attendance";
 
+import Maincom from "../Mainauth/Maincom";
+
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -87,6 +89,9 @@ export default function Page() {
                  <button onClick={() => setSelectedSetting("Work")}>
                 Work
               </button>
+               <button onClick={() => setSelectedSetting("Register")}>
+                Register
+              </button>
             </div>
           )}
         </div>
@@ -137,7 +142,10 @@ export default function Page() {
                    <li onClick={() => setSelectedSetting("Work")}>
                   Work
                 </li>
-
+                 <li onClick={() => setSelectedSetting("Register")}>
+                  Register
+                </li>
+                
 
               </ul>
             )}
@@ -183,7 +191,7 @@ export default function Page() {
             </>
           )}
            
-{activeTab === "Attendence" && selectedSetting === "" && (
+             {activeTab === "Attendence" && selectedSetting === "" && (
             <>
                  <Attendance  /> 
             </>
@@ -216,7 +224,13 @@ export default function Page() {
             
             </>
           )}
-
+            {selectedSetting === "Register" && (
+            <>
+               <Maincom />
+            
+            </>
+          )}
+ 
        
 
         </main>
