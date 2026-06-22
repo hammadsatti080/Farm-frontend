@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-/* ✅ Move outside component (IMPORTANT FIX) */
-const images = ["./cow.avif", "./cow1.avif"];
+/* Images */
+const images = ["./Farms.jpeg", "./cow1.avif"];
 
 export default function Hero() {
   const [index, setIndex] = useState(0);
@@ -13,12 +13,10 @@ export default function Hero() {
     const interval = setInterval(() => {
       setFade(false);
 
-      const timeout = setTimeout(() => {
+      setTimeout(() => {
         setIndex((prev) => (prev + 1) % images.length);
         setFade(true);
       }, 500);
-
-      return () => clearTimeout(timeout);
     }, 4000);
 
     return () => clearInterval(interval);
@@ -60,43 +58,123 @@ export default function Hero() {
       <div
         style={{
           position: "relative",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          paddingLeft: "8%",
+          paddingRight: "8%",
           color: "white",
-          textAlign: "center",
-          top: "50%",
-          transform: "translateY(-50%)",
+          zIndex: 2,
         }}
       >
-        <h1
+        <div
           style={{
-            fontSize: "50px",
-            fontWeight: "bold",
-            animation: "slideUp 1s ease-in-out",
+            maxWidth: "650px",
+            animation: "fadeInUp 1.2s ease",
           }}
         >
-          Farm House
-        </h1>
+          <span
+            style={{
+              display: "inline-block",
+              padding: "8px 18px",
+              background: "rgba(255,255,255,0.15)",
+              borderRadius: "30px",
+              marginBottom: "20px",
+              fontSize: "14px",
+              letterSpacing: "1px",
+              textTransform: "uppercase",
+            }}
+          >
+            Welcome to Our Farm
+          </span>
 
-        <p
-          style={{
-            fontSize: "18px",
-            marginTop: "10px",
-            opacity: 0.9,
-          }}
-        >
-          Fresh & Natural Farming Experience
-        </p>
+          <h1
+            style={{
+              fontSize: "clamp(42px, 6vw, 72px)",
+              fontWeight: "700",
+              lineHeight: "1.1",
+              marginBottom: "20px",
+            }}
+          >
+            Farm House
+          </h1>
+
+          <p
+            style={{
+              fontSize: "24px",
+              fontWeight: "500",
+              marginBottom: "15px",
+              color: "#f5f5f5",
+            }}
+          >
+            Fresh & Natural Farming Experience
+          </p>
+
+          <p
+            style={{
+              fontSize: "18px",
+              lineHeight: "1.8",
+              opacity: 0.9,
+              marginBottom: "35px",
+            }}
+          >
+            Experience the beauty of nature and sustainable farming. Enjoy
+            fresh organic products, healthy livestock, and a peaceful rural
+            environment where quality, care, and tradition come together.
+            From farm-fresh produce to unforgettable countryside experiences,
+            we bring nature closer to you.
+          </p>
+
+          <div
+            style={{
+              display: "flex",
+              gap: "15px",
+              flexWrap: "wrap",
+            }}
+          >
+       
+            <button
+              style={{
+                padding: "14px 32px",
+                background: "transparent",
+                color: "white",
+                border: "2px solid white",
+                borderRadius: "8px",
+                fontSize: "16px",
+                fontWeight: "600",
+                cursor: "pointer",
+              }}
+            >
+              Contact Us
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Animation */}
+      {/* Animations */}
       <style jsx>{`
-        @keyframes slideUp {
+        @keyframes fadeInUp {
           from {
-            transform: translateY(40px);
             opacity: 0;
+            transform: translateY(40px);
           }
           to {
-            transform: translateY(0);
             opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        button:hover {
+          transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+          div[style*="padding-left: 8%"] {
+            justify-content: center !important;
+            text-align: center;
+            padding-left: 20px !important;
+            padding-right: 20px !important;
           }
         }
       `}</style>

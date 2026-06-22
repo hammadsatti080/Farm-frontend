@@ -14,6 +14,8 @@ import Inventorycatagory from "../CategoryManagers/Inventorycatagory";
 import VaccinatedAnimals from "../VaccinatedAnimal/VaccinatedAnimals";
 import Workcatagory from "../CategoryManagers/Workcatagory";
 import Handleteam from "../Team Management/Handleteam";
+import Attendance from "../Attendence/Attendance";
+
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -28,6 +30,7 @@ export default function Page() {
     { id: "Stock", label: "Stock" },
     { id: "Vacine", label: "Vacine" },
       { id: "team", label: "Team management" },
+       { id: "Attendence", label: "Attendence management" },
   ];
 
   const handleChange = (id: string) => {
@@ -179,8 +182,12 @@ export default function Page() {
                    <Handleteam  />
             </>
           )}
-        
-
+           
+{activeTab === "Attendence" && selectedSetting === "" && (
+            <>
+                 <Attendance  /> 
+            </>
+          )}
 
           {/* Settings Pages */}
           {selectedSetting === "category" && (
@@ -209,6 +216,8 @@ export default function Page() {
             
             </>
           )}
+
+       
 
         </main>
       </div>
