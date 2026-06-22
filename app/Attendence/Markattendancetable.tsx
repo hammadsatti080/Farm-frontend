@@ -20,7 +20,7 @@ const MarkAttendanceTable = ({ onSaved }: Props) => {
 
     // ================= FETCH TEAM =================
     useEffect(() => {
-        fetch("http://localhost:5000/api/handleteam")
+        fetch("https://farm-backend-lac.vercel.app/api/handleteam")
             .then((res) => res.json())
             .then((data: TeamMember[]) => {
                 const updated = data.map((m) => ({
@@ -49,7 +49,7 @@ const MarkAttendanceTable = ({ onSaved }: Props) => {
 
     // ================= SAVE SINGLE =================
     const handleSave = (member: TeamMember) => {
-        fetch("http://localhost:5000/api/saveattendance", {
+        fetch("https://farm-backend-lac.vercel.app/api/saveattendance", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(member),
@@ -73,7 +73,7 @@ const MarkAttendanceTable = ({ onSaved }: Props) => {
             selectedTime: m.selectedTime || "",
         }));
 
-        fetch("http://localhost:5000/api/saveattendance/bulk", {
+        fetch("https://farm-backend-lac.vercel.app/api/saveattendance/bulk", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

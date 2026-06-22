@@ -21,7 +21,7 @@ const SavedAttendanceTable = forwardRef<SavedAttendanceTableHandle>((_props, ref
     const getTodayDate = () => new Date().toISOString().split("T")[0];
 
     const fetchSaved = () => {
-        fetch("http://localhost:5000/api/all")
+        fetch("https://farm-backend-lac.vercel.app/api/all")
             .then((res) => res.json())
             .then((data: TeamMember[]) => setSavedAttendance(data))
             .catch((err) => console.error(err));
