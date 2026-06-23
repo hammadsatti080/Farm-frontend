@@ -12,7 +12,7 @@ interface WorkType {
 }
 
 const API =
-    "http://localhost:5000/api/work-typesCatagory";
+    "https://farm-backend-lac.vercel.app/api/work-typesCatagory";
 
 export default function Workcatagory() {
     const [types, setTypes] = useState<
