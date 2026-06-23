@@ -12,7 +12,7 @@ interface WorkType {
 }
 
 const API =
-    "https://farm-backend-lac.vercel.app/api/work-typesCatagory";
+    "http://localhost:5000/api/work-typesCatagory";
 
 export default function Workcatagory() {
     const [types, setTypes] = useState<
@@ -270,7 +270,7 @@ export default function Workcatagory() {
             auto-fit,
             minmax(250px, 1fr)
           );
-          gap: 20px;
+          gap: 40px;
         }
 
         .card {
