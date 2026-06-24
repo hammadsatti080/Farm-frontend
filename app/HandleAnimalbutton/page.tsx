@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
+
 type Animal = {
     _id?: string;
     name: string;
@@ -12,6 +13,7 @@ type Animal = {
     buyDate: string;
     milk: string;
     vacine: string;
+    image: string;
 };
 
 type Category = {
@@ -23,20 +25,20 @@ export default function Page() {
     const [animals, setAnimals] = useState<Animal[]>([]);
     const [search, setSearch] = useState("");
     const [editId, setEditId] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
-useEffect(() => {
-    const handleResize = () => {
-        setIsMobile(window.innerWidth <= 768);
-    };
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
 
-    handleResize(); // initial check
+        handleResize(); // initial check
 
-    window.addEventListener("resize", handleResize);
+        window.addEventListener("resize", handleResize);
 
-    return () =>
-        window.removeEventListener("resize", handleResize);
-}, []);
+        return () =>
+            window.removeEventListener("resize", handleResize);
+    }, []);
     const [form, setForm] = useState<Animal>({
         name: "",
         type: "",
@@ -45,6 +47,8 @@ useEffect(() => {
         buyDate: "",
         milk: "",
         vacine: "",
+        image: ""
+
     });
 
     const [types, setTypes] = useState<Category[]>([]);
@@ -108,6 +112,7 @@ useEffect(() => {
             buyDate: "",
             milk: "",
             vacine: "",
+            image: ""
         });
 
         const res = await fetch(
@@ -191,6 +196,7 @@ useEffect(() => {
                     <table style={styles.table}>
                         <thead>
                             <tr>
+                                <th style={styles.th}>Picture</th>
                                 <th style={styles.th}>Name</th>
                                 <th style={styles.th}>Type</th>
                                 <th style={styles.th}>Color</th>
@@ -206,6 +212,23 @@ useEffect(() => {
                         <tbody>
                             {filtered.map((a) => (
                                 <tr key={a._id} style={styles.tr}>
+                                    <td style={styles.td}>
+                                        {a.image ? (
+                                            <img
+                                                src={a.image}
+                                                alt={a.name}
+                                                width={60}
+                                                height={60}
+                                                style={{
+                                                    borderRadius: "8px",
+                                                    objectFit: "cover",
+                                                }}
+                                            />
+                                        ) : (
+                                            "No Image"
+                                        )}
+                                    </td>
+
                                     <td style={styles.td}>{a.name}</td>
                                     <td style={styles.td}>{a.type}</td>
                                     <td style={styles.td}>{a.color}</td>
@@ -435,6 +458,14 @@ useEffect(() => {
                                 </option>
                             ))}
                         </select>
+                        <input
+                            placeholder="Image URL"
+                            style={styles.input}
+                            value={form.image}
+                            onChange={(e) =>
+                                setForm({ ...form, image: e.target.value })
+                            }
+                        />
 
                         <input
                             placeholder="Color"

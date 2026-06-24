@@ -24,6 +24,7 @@ const Page = () => {
           password,
         }),
       });
+      
 
       const data = await res.json();
 
