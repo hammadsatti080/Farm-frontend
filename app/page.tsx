@@ -2,6 +2,7 @@
 import About from "./Homescreen/About";
 import Hero from "./Homescreen/Hero";
 import Review from "./Homescreen/Review";
+import Stock from "./Homescreen/Stock";
 
 {/*import { QRCode } from '@/components/shared-assets/qr-code';
 
@@ -14,7 +15,9 @@ export default function Home() {
     <div >
       <Hero />
       <About />
+      <Stock />
       <Review />
+
     </div>
   );
 }
