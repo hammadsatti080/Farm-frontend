@@ -3,19 +3,18 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import "./Navbar.css";
-import { Home, X, Menu } from "lucide-react";
-import { useRouter,  } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { FaXmark, FaBars, FaHouse, FaCircleInfo } from "react-icons/fa6";
+import { GiBarn } from "react-icons/gi";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "About", href: "/abouts" },
+    { name: "Home", href: "/", icon: FaHouse },
+    { name: "About", href: "/abouts", icon: FaCircleInfo },
   ];
-
-  
 
   // ✅ lock body scroll while modal is open
   useEffect(() => {
@@ -31,18 +30,22 @@ export default function Navbar() {
 
         {/* LOGO */}
         <Link href="/" className="logo">
-          <Home size={18} />
+          <GiBarn size={20} />
           <span>Farm House</span>
         </Link>
 
         {/* DESKTOP */}
         <div className="desktop-wrapper">
           <div className="nav-links">
-            {navLinks.map((link) => (
-              <Link key={link.name} href={link.href} className="nav-link">
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              return (
+                <Link key={link.name} href={link.href} className="nav-link">
+                  <Icon size={16} />
+                  <span>{link.name}</span>
+                </Link>
+              );
+            })}
           </div>
 
           <button
@@ -59,7 +62,7 @@ export default function Navbar() {
           onClick={() => setIsOpen((prev) => !prev)}
           aria-label="Toggle menu"
         >
-          {isOpen ? <X size={22} /> : <Menu size={22} />}
+          {isOpen ? <FaXmark size={22} /> : <FaBars size={22} />}
         </button>
 
       </div>
@@ -78,21 +81,25 @@ export default function Navbar() {
                 onClick={() => setIsOpen(false)}
                 aria-label="Close menu"
               >
-                <X size={20} />
+                <FaXmark size={20} />
               </button>
             </div>
 
             <div className="mobile-menu-links">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="mobile-link"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className="mobile-link"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Icon size={18} />
+                    <span>{link.name}</span>
+                  </Link>
+                );
+              })}
             </div>
 
             <button

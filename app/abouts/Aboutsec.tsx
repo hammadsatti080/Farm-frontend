@@ -2,7 +2,7 @@
 
 import { CSSProperties } from "react";
 
-export default function About() {
+export default function Aboutsec() {
   return (
     <div style={pageStyle}>
       {/* CONTENT */}

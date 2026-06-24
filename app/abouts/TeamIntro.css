@@ -1,0 +1,61 @@
+.team-intro {
+  text-align: center;
+  padding: 60px 20px 40px;
+  max-width: 1500px;
+  margin: 0 auto;
+     background-color: #EDF9FF;
+}
+
+.team-eyebrow {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #D97706;
+  margin: 0 0 10px;
+}
+
+.team-heading {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: #1E3A8A;
+  margin: 0;
+  line-height: 1.15;
+  position: relative;
+  display: inline-block;
+}
+
+.team-underline {
+  display: block;
+  margin: 4px auto 0;
+}
+
+.team-subtext {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  color: #3B4252;
+  margin: 16px auto 0;
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+@media (max-width: 480px) {
+  .team-intro {
+    padding: 40px 16px 28px;
+  }
+
+  .team-heading {
+    font-size: 30px;
+  }
+
+  .team-underline {
+    width: 130px;
+    height: 11px;
+  }
+
+  .team-subtext {
+    font-size: 13.5px;
+  }
+}

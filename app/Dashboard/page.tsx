@@ -7,7 +7,6 @@ import MainMilk from "../Milkmanagement/MainMilk";
 import MilkDashboard from "../AdminDashboard/MilkDashboard";
 import Mainfile from "../MilkSale/Mainfile";
 
-
 import BuyanimalCatagory from "../Animal/BuyanimalCatagory";
 import Stockhandler from "../Animal/Stockhandler";
 import Inventorycatagory from "../CategoryManagers/Inventorycatagory";
@@ -18,6 +17,19 @@ import Attendance from "../Attendence/Attendance";
 
 import Maincom from "../Mainauth/Maincom";
 
+import {
+  FaGaugeHigh,
+  FaTag,
+  FaSyringe,
+  FaUsers,
+  FaClipboardCheck,
+  FaFolder,
+  FaPaw,
+  FaWarehouse,
+  FaBriefcase,
+  FaClipboardList,
+} from "react-icons/fa6";
+import { GiMilkCarton , GiBarn } from "react-icons/gi";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -26,13 +38,21 @@ export default function Page() {
   const [selectedSetting, setSelectedSetting] = useState("");
 
   const links = [
-    { id: "overview", label: "Overview" },
-    { id: "Milk", label: "Milk" },
-    { id: "Sale", label: "Sale" },
-    { id: "Stock", label: "Stock" },
-    { id: "Vacine", label: "Vacine" },
-      { id: "team", label: "Team management" },
-       { id: "Attendence", label: "Attendence management" },
+    { id: "overview", label: "Overview", icon: FaGaugeHigh },
+    { id: "Milk", label: "Milk", icon: GiMilkCarton },
+    { id: "Sale", label: "Sale", icon: FaTag },
+    { id: "Stock", label: "Stock", icon: FaWarehouse },
+    { id: "Vacine", label: "Vaccine", icon: FaSyringe },
+    { id: "team", label: "Team Management", icon: FaUsers },
+    { id: "Attendence", label: "Attendance Management", icon: FaClipboardCheck },
+  ];
+
+  const settingsLinks = [
+    { id: "category", label: "Category", icon: FaFolder },
+    { id: "Animal", label: "Animal", icon: FaPaw },
+    { id: "Inventory", label: "Inventory", icon: FaWarehouse },
+    { id: "Work", label: "Work", icon: FaBriefcase },
+    { id: "Register", label: "Register", icon: FaClipboardList },
   ];
 
   const handleChange = (id: string) => {
@@ -58,15 +78,19 @@ export default function Page() {
       {/* ================= MOBILE MENU ================= */}
       {showMobileMenu && (
         <div className="mobile-menu">
-          {links.map((link) => (
-            <button
-              key={link.id}
-              onClick={() => handleChange(link.id)}
-              className={activeTab === link.id ? "active-mobile" : ""}
-            >
-              {link.label}
-            </button>
-          ))}
+          {links.map((link) => {
+            const Icon = link.icon;
+            return (
+              <button
+                key={link.id}
+                onClick={() => handleChange(link.id)}
+                className={activeTab === link.id ? "active-mobile" : ""}
+              >
+                <Icon size={18} />
+                <span>{link.label}</span>
+              </button>
+            );
+          })}
 
           <button
             onClick={() => setShowSettings(!showSettings)}
@@ -77,21 +101,18 @@ export default function Page() {
 
           {showSettings && (
             <div className="mobile-submenu">
-              <button onClick={() => setSelectedSetting("category")}>
-                Category
-              </button>
-              <button onClick={() => setSelectedSetting("Animal")}>
-                Animal
-              </button>
-               <button onClick={() => setSelectedSetting("Inventory")}>
-                Inventory
-              </button>
-                 <button onClick={() => setSelectedSetting("Work")}>
-                Work
-              </button>
-               <button onClick={() => setSelectedSetting("Register")}>
-                Register
-              </button>
+              {settingsLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <button
+                    key={link.id}
+                    onClick={() => setSelectedSetting(link.id)}
+                  >
+                    <Icon size={16} />
+                    <span>{link.label}</span>
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>
@@ -101,23 +122,30 @@ export default function Page() {
       <div className="desktop-layout">
         {/* Sidebar */}
         <aside className="sidebar">
-          <div className="logo">
-            <h2>Admin</h2>
-          </div>
+         <div className="logo">
+  <div className="logo-mark">
+    <GiBarn size={22} />
+  </div>
+  <h2>Farm House</h2>
+</div>
 
           <ul className="menu">
-            {links.map((link) => (
-              <li
-                key={link.id}
-                className={activeTab === link.id ? "active" : ""}
-                onClick={() => {
-                  setActiveTab(link.id);
-                  setSelectedSetting("");
-                }}
-              >
-                {link.label}
-              </li>
-            ))}
+            {links.map((link) => {
+              const Icon = link.icon;
+              return (
+                <li
+                  key={link.id}
+                  className={activeTab === link.id ? "active" : ""}
+                  title={link.label}
+                  onClick={() => {
+                    setActiveTab(link.id);
+                    setSelectedSetting("");
+                  }}
+                >
+                  <Icon size={20} />
+                </li>
+              );
+            })}
 
             {/* Settings Dropdown */}
             <li
@@ -129,24 +157,18 @@ export default function Page() {
 
             {showSettings && (
               <ul className="submenu">
-                <li onClick={() => setSelectedSetting("category")}>
-                  Category
-                </li>
-
-                <li onClick={() => setSelectedSetting("Animal")}>
-                  Animal
-                </li>
-                <li onClick={() => setSelectedSetting("Inventory")}>
-                  Inventory
-                </li>
-                   <li onClick={() => setSelectedSetting("Work")}>
-                  Work
-                </li>
-                 <li onClick={() => setSelectedSetting("Register")}>
-                  Register
-                </li>
-                
-
+                {settingsLinks.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <li
+                      key={link.id}
+                      onClick={() => setSelectedSetting(link.id)}
+                    >
+                      <Icon size={16} />
+                      <span>{link.label}</span>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </ul>
@@ -155,84 +177,33 @@ export default function Page() {
         {/* ================= CONTENT ================= */}
         <main className="content">
           {activeTab === "overview" && selectedSetting === "" && (
-            <>
-             
-            
-               <MilkDashboard   />
-            </>
+            <MilkDashboard />
           )}
 
-          {activeTab === "Milk" && selectedSetting === "" && (
-            <>
-             
-       <MainMilk   />
-            </>
-          )}
+          {activeTab === "Milk" && selectedSetting === "" && <MainMilk />}
 
-          {activeTab === "Sale" && selectedSetting === "" && (
-            <>
-               <Mainfile   />
-            </>
-          )}
+          {activeTab === "Sale" && selectedSetting === "" && <Mainfile />}
 
           {activeTab === "Stock" && selectedSetting === "" && (
-            <>
-                   <Stockhandler  />
-            </>
+            <Stockhandler />
           )}
+
           {activeTab === "Vacine" && selectedSetting === "" && (
-            <>
-                   <VaccinatedAnimals  />
-            </>
+            <VaccinatedAnimals />
           )}
-          {activeTab === "team" && selectedSetting === "" && (
-            <>
-                   <Handleteam  />
-            </>
-          )}
-           
-             {activeTab === "Attendence" && selectedSetting === "" && (
-            <>
-                 <Attendance  /> 
-            </>
+
+          {activeTab === "team" && selectedSetting === "" && <Handleteam />}
+
+          {activeTab === "Attendence" && selectedSetting === "" && (
+            <Attendance />
           )}
 
           {/* Settings Pages */}
-          {selectedSetting === "category" && (
-            <>
-              <Catagory />
-
-            </>
-          )}
-
-          {selectedSetting === "Animal" && (
-            <>
-               <BuyanimalCatagory />
-            
-            </>
-          )}
-          
- {selectedSetting === "Inventory" && (
-            <>
-               <Inventorycatagory />
-            
-            </>
-          )}
-          {selectedSetting === "Work" && (
-            <>
-               <Workcatagory />
-            
-            </>
-          )}
-            {selectedSetting === "Register" && (
-            <>
-               <Maincom />
-            
-            </>
-          )}
- 
-       
-
+          {selectedSetting === "category" && <Catagory />}
+          {selectedSetting === "Animal" && <BuyanimalCatagory />}
+          {selectedSetting === "Inventory" && <Inventorycatagory />}
+          {selectedSetting === "Work" && <Workcatagory />}
+          {selectedSetting === "Register" && <Maincom />}
         </main>
       </div>
     </div>
