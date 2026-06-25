@@ -1,0 +1,336 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap");
+
+/* ============ SECTION BG — terracotta, distinct from About's blue ============ */
+.categories-section {
+    background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+    padding: 50px 24px 100px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    font-family: "Inter", sans-serif;
+}
+
+/* soft ambient blobs for depth, no extra motion */
+.categories-section::before,
+.categories-section::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.categories-section::before {
+    width: 320px;
+    height: 320px;
+    background: #1f7a4d;
+    top: -120px;
+    left: -100px;
+}
+
+.categories-section::after {
+    width: 280px;
+    height: 280px;
+    background: #c8742f;
+    bottom: -100px;
+    right: -80px;
+}
+
+.cat-header {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 56px;
+}
+
+.categories-section .eyebrow {
+    display: inline-block;
+    color: #c8742f;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.categories-section h2 {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 44px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 14px 0;
+}
+
+.cat-intro {
+    color: #6b5746;
+    font-size: 16px;
+    max-width: 460px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ============ ROWS ============ */
+.cat-row {
+    max-width: 1200px;
+    margin: 0 auto 52px;
+    text-align: left;
+    position: relative;
+    z-index: 1;
+}
+
+.cat-row:last-child {
+    margin-bottom: 0;
+}
+
+.cat-row-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 23px;
+    font-weight: 600;
+    color: #14532d;
+    margin: 0 0 24px 0;
+}
+
+.cat-row-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #1f7a4d;
+    flex-shrink: 0;
+}
+
+/* ============ GRID ============ */
+.cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 22px;
+}
+
+/* ============ CARD — 3D flip on hover ============ */
+.cat-card {
+    background: transparent;
+    border-radius: 18px;
+    text-align: center;
+    cursor: pointer;
+    perspective: 1000px;
+    height: 150px;
+}
+
+.cat-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.cat-card:hover .cat-card-inner {
+    transform: rotateY(180deg);
+}
+
+.cat-card-face {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backface-visibility: hidden;
+    box-shadow: 0 6px 16px rgba(60, 40, 20, 0.08);
+    padding: 18px;
+}
+
+.cat-card-front {
+    background: #ffffff;
+}
+
+.cat-card-back {
+    transform: rotateY(180deg);
+    color: #ffffff;
+}
+
+.cat-card-back .cat-back-label {
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 6px;
+}
+
+.cat-card-back h4 {
+    color: #ffffff !important;
+    font-size: 16px;
+}
+
+.cat-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 16px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cat-card h4 {
+    margin: 0;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: #2f2218;
+}
+
+/* 4-color accent cycle: front icon tint + back face gradient */
+.cat-card.accent-1 .cat-icon {
+    background: #e6f4ea;
+    color: #1f7a4d;
+}
+
+.cat-card.accent-2 .cat-icon {
+    background: #fbe7d6;
+    color: #c8742f;
+}
+
+.cat-card.accent-3 .cat-icon {
+    background: #eaf0fb;
+    color: #3b5fc0;
+}
+
+.cat-card.accent-4 .cat-icon {
+    background: #fbe6ec;
+    color: #c04b6e;
+}
+
+.cat-card.accent-1 .cat-card-back {
+    background: linear-gradient(135deg, #1f7a4d, #14532d);
+}
+
+.cat-card.accent-2 .cat-card-back {
+    background: linear-gradient(135deg, #c8742f, #a3551c);
+}
+
+.cat-card.accent-3 .cat-card-back {
+    background: linear-gradient(135deg, #3b5fc0, #2a4494);
+}
+
+.cat-card.accent-4 .cat-card-back {
+    background: linear-gradient(135deg, #c04b6e, #98344f);
+}
+
+.cat-card.accent-1:hover .cat-card-front {
+    box-shadow: 0 18px 32px rgba(31, 122, 77, 0.22);
+}
+
+.cat-card.accent-2:hover .cat-card-front {
+    box-shadow: 0 18px 32px rgba(200, 116, 47, 0.22);
+}
+
+.cat-card.accent-3:hover .cat-card-front {
+    box-shadow: 0 18px 32px rgba(59, 95, 192, 0.22);
+}
+
+.cat-card.accent-4:hover .cat-card-front {
+    box-shadow: 0 18px 32px rgba(192, 75, 110, 0.22);
+}
+
+/* ============ STATUS TEXT ============ */
+.cat-status {
+    color: #6b5746;
+    font-size: 15px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.cat-status.error {
+    color: #b3463c;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1024px) {
+    .cat-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .categories-section {
+        padding: 64px 18px 70px;
+    }
+
+    .cat-header {
+        margin-bottom: 40px;
+    }
+
+    .categories-section h2 {
+        font-size: 32px;
+    }
+
+    .cat-intro {
+        font-size: 14.5px;
+    }
+
+    .cat-row {
+        margin-bottom: 40px;
+    }
+
+    .cat-row-title {
+        font-size: 19px;
+    }
+
+    .cat-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .cat-card {
+        height: 130px;
+    }
+
+    .cat-card-face {
+        padding: 14px;
+    }
+
+    .cat-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 12px;
+    }
+
+    .cat-card h4 {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 420px) {
+    .cat-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .categories-section h2 {
+        font-size: 28px;
+    }
+}
+
+/* Respect reduced motion preference: disable flip, show front face only */
+@media (prefers-reduced-motion: reduce) {
+    .cat-card-inner {
+        transition: none !important;
+    }
+
+    .cat-card:hover .cat-card-inner {
+        transform: none !important;
+    }
+}
+
+/* Touch devices: tap to flip instead of hover */
+@media (hover: none) {
+    .cat-card.is-flipped .cat-card-inner {
+        transform: rotateY(180deg);
+    }
+}

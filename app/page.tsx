@@ -1,5 +1,6 @@
 
 import About from "./Homescreen/About";
+import Categories from "./Homescreen/Categories";
 import Hero from "./Homescreen/Hero";
 import Review from "./Homescreen/Review";
 import Stock from "./Homescreen/Stock";
@@ -15,6 +16,7 @@ export default function Home() {
     <div >
       <Hero />
       <About />
+      <Categories />
       <Stock />
       <Review />
 
