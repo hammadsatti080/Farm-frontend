@@ -25,7 +25,7 @@ export default function Hero() {
 
   const router = useRouter();
   const handlegobutton = () => {
-    router.push("/Contact.tsx")
+    router.push("/Contact")
   }
 
   return (

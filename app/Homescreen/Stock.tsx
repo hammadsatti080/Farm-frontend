@@ -222,7 +222,7 @@ export default function Stock() {
 
     useEffect(() => {
         ensureFonts();
-        fetch("http://localhost:5000/api/Handleanimals")
+        fetch("https://farm-backend-lac.vercel.app/api/Handleanimals")
             .then((res) => res.json())
             .then((data) => {
                 setAnimals(Array.isArray(data) ? data : []);
