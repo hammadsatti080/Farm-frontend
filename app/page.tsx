@@ -1,4 +1,5 @@
 
+import Owner from "./abouts/Owner";
 import About from "./Homescreen/About";
 import Categories from "./Homescreen/Categories";
 import Hero from "./Homescreen/Hero";
@@ -16,6 +17,7 @@ export default function Home() {
     <div >
       <Hero />
       <About />
+      <Owner />
       <Categories />
       <Stock />
       <Review />

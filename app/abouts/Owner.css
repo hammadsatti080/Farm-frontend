@@ -1,0 +1,204 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap");
+
+.owner-section {
+    padding: 40px 24px 60px;
+    background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+    text-align: center;
+}
+
+.owner-header {
+    margin: 0 auto 44px;
+    max-width: 600px;
+}
+
+.owner-eyebrow {
+    display: inline-block;
+    color: #f5841f;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    margin-bottom: 10px;
+}
+
+.owner-title {
+    position: relative;
+    display: inline-block;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: #16407a;
+    margin: 0;
+    padding-bottom: 14px;
+}
+
+.owner-underline {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 12px;
+}
+
+.owner-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+/* ============ CARD — same design as instructor card ============ */
+.owner-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.owner-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.owner-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* dark gradient overlay at the bottom, just like the instructor card */
+.owner-card-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 16px 18px;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.92) 0%,
+        rgba(0, 0, 0, 0.7) 55%,
+        rgba(0, 0, 0, 0) 100%
+    );
+}
+
+.owner-card-name {
+    margin: 0 0 2px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* row that holds the role text + arrow button — flex, NOT a fixed 230px gap,
+   so it never overflows on small cards */
+.owner-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 8px;
+}
+
+.owner-card-role {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #f5a623;
+}
+
+.owner-card-arrow {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.owner-card-arrow:hover {
+    background: #f5841f;
+    transform: translateX(2px);
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+    .owner-section {
+        padding: 36px 18px 48px;
+    }
+
+    .owner-header {
+        text-align: center;
+        margin: 0 auto 32px;
+    }
+
+    .owner-title {
+        font-size: 28px;
+        padding-bottom: 12px;
+    }
+
+    .owner-underline {
+        width: 150px;
+    }
+
+    .owner-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+       
+    }
+
+    .owner-card-name {
+        font-size: 16px;
+        
+    }
+
+    .owner-card-role {
+        font-size: 13px;
+         
+      
+    }
+
+    .owner-card-arrow {
+        width: 26px;
+        height: 26px;
+        font-size: 14px;
+    }
+}
+@media (max-width: 420px) {
+    .owner-title {
+        font-size: 24px;
+    }
+
+    .owner-underline {
+        width: 120px;
+    }
+
+    .owner-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .owner-card-footer {
+        display: flex;
+        flex-direction: row;   /* same as desktop */
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .owner-card-arrow {
+        align-self: center;    /* remove flex-end */
+    }
+}
