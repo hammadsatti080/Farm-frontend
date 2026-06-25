@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 /* Images */
@@ -21,6 +22,11 @@ export default function Hero() {
 
     return () => clearInterval(interval);
   }, []);
+
+  const router = useRouter();
+  const handlegobutton = () => {
+    router.push("/Contact.tsx")
+  }
 
   return (
     <div
@@ -133,7 +139,7 @@ export default function Hero() {
               flexWrap: "wrap",
             }}
           >
-       
+
             <button
               style={{
                 padding: "14px 32px",
@@ -145,6 +151,7 @@ export default function Hero() {
                 fontWeight: "600",
                 cursor: "pointer",
               }}
+              onClick={handlegobutton}
             >
               Contact Us
             </button>

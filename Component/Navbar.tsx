@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import "./Navbar.css";
 import { useRouter } from "next/navigation";
-import { FaXmark, FaBars, FaHouse, FaCircleInfo } from "react-icons/fa6";
-import { GiBarn } from "react-icons/gi";
+import { FaXmark, FaBars, FaHouse, FaCircleInfo ,  FaPhone } from "react-icons/fa6";
+import { GiBarn  } from "react-icons/gi";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +14,7 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", href: "/", icon: FaHouse },
     { name: "About", href: "/abouts", icon: FaCircleInfo },
+    { name: "Contact", href: "/Contact", icon: FaPhone }
   ];
 
   // ✅ lock body scroll while modal is open

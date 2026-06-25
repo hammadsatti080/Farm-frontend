@@ -1,22 +1,13 @@
 "use client";
 
 import { CSSProperties } from "react";
+import Aboutheader from "./Aboutheader";
 
 export default function Aboutsec() {
   return (
     <div style={pageStyle}>
-      {/* CONTENT */}
-      <div style={contentStyle}>
-        <h1 style={titleStyle}>About Our Farm</h1>
-
-        <p style={textStyle}>
-          Our farm has over <b>20+ years of experience</b> in agriculture and
-          livestock management. We are proud to be one of the most trusted and
-          top-rated farms in the region, delivering fresh, natural, and high-quality
-          products. Our mission is to promote healthy farming and sustainable
-          agriculture for future generations.
-        </p>
-      </div>
+      {/* CONTENT */}    
+          <Aboutheader />
 
       {/* STATS */}
       <div style={gridStyle}>
@@ -68,25 +59,6 @@ const pageStyle: CSSProperties = {
   padding: "70px 20px",
   color: "#0f172a",
   background: "linear-gradient(135deg, #e0f2fe, #f0f9ff)", // light blue mix
-};
-
-const contentStyle: CSSProperties = {
-  maxWidth: "900px",
-  margin: "0 auto",
-  textAlign: "center",
-};
-
-const titleStyle: CSSProperties = {
-  fontSize: "44px",
-  fontWeight: "bold",
-  color: "#1e3a8a", // deep blue
-  marginBottom: "15px",
-};
-
-const textStyle: CSSProperties = {
-  fontSize: "18px",
-  lineHeight: "1.8",
-  color: "#334155",
 };
 
 const gridStyle: CSSProperties = {
