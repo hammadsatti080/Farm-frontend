@@ -33,6 +33,7 @@ import {
 import { GiMilkCarton, GiBarn } from "react-icons/gi";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import VaccineCatagory from "../CategoryManagers/Vacinecatagory";
 
 
 export default function Page() {
@@ -57,6 +58,7 @@ export default function Page() {
     { id: "Animal", label: "Animal", icon: FaPaw },
     { id: "Inventory", label: "Inventory", icon: FaWarehouse },
     { id: "Work", label: "Work", icon: FaBriefcase },
+    { id: "Vacine", label: "Vaccine", icon: FaSyringe },
     { id: "Register", label: "Register", icon: FaClipboardList },
   ];
 
@@ -232,6 +234,7 @@ export default function Page() {
           {selectedSetting === "Animal" && <BuyanimalCatagory />}
           {selectedSetting === "Inventory" && <Inventorycatagory />}
           {selectedSetting === "Work" && <Workcatagory />}
+           {selectedSetting === "Vacine" && <VaccineCatagory />}
           {selectedSetting === "Register" && <Maincom />}
         </main>
       </div>

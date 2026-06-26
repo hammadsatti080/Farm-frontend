@@ -4,6 +4,13 @@ import { useEffect, useState } from "react";
 import "./DiseaseHistory.css";
 import { useRouter } from "next/navigation";
 
+
+interface Medicine {
+  name: string;
+  dosage?: string;
+  duration?: string;
+}
+
 interface FormData {
   animalId: string;
   diseaseName: string;
@@ -13,6 +20,7 @@ interface FormData {
   symptoms: string;
   notes: string;
   status: string;
+  medicines: Medicine[];
 }
 interface Animal {
   _id: string;
@@ -34,17 +42,18 @@ interface DiseaseItem {
   symptoms?: string;
   notes?: string;
   status: string;
+  medicines?: Medicine[];
 }
 
 export default function Page() {
- const [animals, setAnimals] = useState<Animal[]>([]);
-const [doctors, setDoctors] = useState<Doctor[]>([]);
-const [diseases, setDiseases] = useState<DiseaseItem[]>([]);
-const [filtered, setFiltered] = useState<DiseaseItem[]>([]);
+  const [animals, setAnimals] = useState<Animal[]>([]);
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [diseases, setDiseases] = useState<DiseaseItem[]>([]);
+  const [filtered, setFiltered] = useState<DiseaseItem[]>([]);
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-const [editId, setEditId] = useState<string | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
 
   const [form, setForm] = useState<FormData>({
     animalId: "",
@@ -55,8 +64,35 @@ const [editId, setEditId] = useState<string | null>(null);
     symptoms: "",
     notes: "",
     status: "Active",
+    medicines: [],
   });
 
+  const addMedicine = () => {
+    setForm({
+      ...form,
+      medicines: [
+        ...form.medicines,
+        { name: "", dosage: "", duration: "" },
+      ],
+    });
+  };
+
+  const updateMedicine = (
+    index: number,
+    key: keyof Medicine,
+    value: string
+  ) => {
+    const updated = form.medicines.map((med, i) =>
+      i === index ? { ...med, [key]: value } : med
+    );
+
+    setForm({ ...form, medicines: updated });
+  };
+
+  const removeMedicine = (index: number) => {
+    const updated = form.medicines.filter((_, i) => i !== index);
+    setForm({ ...form, medicines: updated });
+  };
   // ================= LOAD =================
 
   // ================= FETCH ANIMALS =================
@@ -97,14 +133,14 @@ const [editId, setEditId] = useState<string | null>(null);
   };
 
   useEffect(() => {
-  const loadData = async () => {
-    await fetchAnimals();
-    await fetchDoctors();
-    await fetchDiseases();
-  };
+    const loadData = async () => {
+      await fetchAnimals();
+      await fetchDoctors();
+      await fetchDiseases();
+    };
 
-  loadData();
-}, []);
+    loadData();
+  }, []);
 
 
   // ================= SEARCH =================
@@ -131,76 +167,79 @@ const [editId, setEditId] = useState<string | null>(null);
   };
 
   const handleEdit = (item: DiseaseItem) => {
-  setForm({
-    animalId: item.animalId?._id || "",
-    diseaseName: item.diseaseName,
-    diagnosisDate: item.diagnosisDate?.split("T")[0],
-    recoveryDate: item.recoveryDate?.split("T")[0] || "",
-    doctorId: item.doctorId?._id || "",
-    symptoms: item.symptoms || "",
-    notes: item.notes || "",
-    status: item.status,
-  });
+    setForm({
+      animalId: item.animalId?._id || "",
+      diseaseName: item.diseaseName,
+      diagnosisDate: item.diagnosisDate?.split("T")[0],
+      recoveryDate: item.recoveryDate?.split("T")[0] || "",
+      doctorId: item.doctorId?._id || "",
+      symptoms: item.symptoms || "",
+      notes: item.notes || "",
+      status: item.status,
+      medicines: item.medicines || [],
+    });
 
-  setEditId(item._id);
-  setOpen(true);
-};
+    setEditId(item._id);
+    setOpen(true);
+  };
 
   // ================= SUBMIT =================
- const handleSubmit = async () => {
-  try {
-    const url = editId
-      ? `https://farm-backend-lac.vercel.app/api/disease-history/${editId}`
-      : `https://farm-backend-lac.vercel.app/api/disease-history`;
+  const handleSubmit = async () => {
+    try {
+      const url = editId
+        ? `https://farm-backend-lac.vercel.app/api/disease-history/${editId}`
+        : `https://farm-backend-lac.vercel.app/api/disease-history`;
 
-    const method = editId ? "PUT" : "POST";
+      const method = editId ? "PUT" : "POST";
 
-    await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
+      await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-    await fetchDiseases();
+      await fetchDiseases();
 
-    setOpen(false);
-    setEditId(null);
+      setOpen(false);
+      setEditId(null);
 
-    setForm({
-      animalId: "",
-      diseaseName: "",
-      diagnosisDate: "",
-      recoveryDate: "",
-      doctorId: "",
-      symptoms: "",
-      notes: "",
-      status: "Active",
-    });
-  } catch {
-    alert("Error saving record");
+      setForm({
+        animalId: "",
+        diseaseName: "",
+        diagnosisDate: "",
+        recoveryDate: "",
+        doctorId: "",
+        symptoms: "",
+        notes: "",
+        status: "Active",
+        medicines: [],
+
+      });
+    } catch {
+      alert("Error saving record");
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    const confirmDelete = confirm("Are you sure you want to delete this record?");
+
+    if (!confirmDelete) return;
+
+    try {
+      await fetch(`https://farm-backend-lac.vercel.app/api/disease-history/${id}`, {
+        method: "DELETE",
+      });
+
+      await fetchDiseases();
+    } catch {
+      alert("Delete failed");
+    }
+  };
+
+  const router = useRouter();
+  const handlegoback = () => {
+    router.back();
   }
-};
-
-const handleDelete = async (id: string) => {
-  const confirmDelete = confirm("Are you sure you want to delete this record?");
-
-  if (!confirmDelete) return;
-
-  try {
-    await fetch(`https://farm-backend-lac.vercel.app/api/disease-history/${id}`, {
-      method: "DELETE",
-    });
-
-    await fetchDiseases();
-  } catch {
-    alert("Delete failed");
-  }
-};
-
-const router = useRouter();
-const handlegoback=()=>{
-  router.back();
-}
   return (
     <div className="page">
       <h2>🐄 Disease History</h2>
@@ -218,12 +257,12 @@ const handlegoback=()=>{
           ➕ Add Disease
         </button>
         <button className="addBtn" onClick={handlegoback}>
-           Go back
+          Go back
         </button>
       </div>
 
       {/* TABLE */}
-      
+
       <div className="tableWrapper">
         <table className="table">
           <thead>
@@ -233,6 +272,7 @@ const handlegoback=()=>{
               <th>Doctor</th>
               <th>Date</th>
               <th>Status</th>
+              <th>Medicines</th>
               <th>Acton</th>
             </tr>
           </thead>
@@ -247,35 +287,48 @@ const handlegoback=()=>{
                   {new Date(item.diagnosisDate).toLocaleDateString()}
                 </td>
                 <td>{item.status}</td>
-             <td className="actions">
-  <button
-    onClick={() => handleEdit(item)}
-    style={{
-      padding: "5px 10px",
-      background: "#1976d2",
-      color: "#fff",
-      border: "none",
-      borderRadius: "6px",
-      cursor: "pointer",
-    }}
-  >
-    Edit
-  </button>
+                <td>
+                  {(item.medicines ?? []).length > 0 ? (
+                    <ul style={{ margin: 0, paddingLeft: "16px" }}>
+                      {(item.medicines ?? []).map((m, i) => (
+                        <li key={i}>
+                          {m.name} {m.dosage && `(${m.dosage})`}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    "No medicines"
+                  )}
+                </td>
+                <td className="actions">
+                  <button
+                    onClick={() => handleEdit(item)}
+                    style={{
+                      padding: "5px 10px",
+                      background: "#1976d2",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Edit
+                  </button>
 
-  <button
-    onClick={() => handleDelete(item._id)}
-    style={{
-      padding: "5px 10px",
-      background: "#d32f2f",
-      color: "#fff",
-      border: "none",
-      borderRadius: "6px",
-      cursor: "pointer",
-    }}
-  >
-    Delete
-  </button>
-</td>
+                  <button
+                    onClick={() => handleDelete(item._id)}
+                    style={{
+                      padding: "5px 10px",
+                      background: "#d32f2f",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -358,6 +411,54 @@ const handlegoback=()=>{
                 onChange={handleChange}
                 className="input"
               />
+
+              {/* MEDICINES SECTION */}
+              <div className="medicineBox">
+                <h4>Medicines</h4>
+
+                <button type="button" onClick={addMedicine} className="addMedBtn">
+                  ➕ Add Medicine
+                </button>
+
+                {form.medicines.map((med, index) => (
+                  <div key={index} className="medicineRow">
+                    <input
+                      placeholder="Medicine name"
+                      value={med.name}
+                      onChange={(e) =>
+                        updateMedicine(index, "name", e.target.value)
+                      }
+                      className="input"
+                    />
+
+                    <input
+                      placeholder="Dosage"
+                      value={med.dosage}
+                      onChange={(e) =>
+                        updateMedicine(index, "dosage", e.target.value)
+                      }
+                      className="input"
+                    />
+
+                    <input
+                      placeholder="Duration"
+                      value={med.duration}
+                      onChange={(e) =>
+                        updateMedicine(index, "duration", e.target.value)
+                      }
+                      className="input"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => removeMedicine(index)}
+                      className="deleteMedBtn"
+                    >
+                      ❌
+                    </button>
+                  </div>
+                ))}
+              </div>
 
               <textarea
                 name="notes"
