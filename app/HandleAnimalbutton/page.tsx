@@ -2,7 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-
+import {
+  FaSyringe,
+} from "react-icons/fa6";
 
 type Animal = {
     _id?: string;
@@ -169,6 +171,10 @@ export default function Page() {
     const handledisease = () => {
         router.push("/DiseaseHistoryPage")
     }
+      const handlevacine = () => {
+        router.push("/VaccinatedAnimal/AddVecine")
+    }
+
     return (
         <div style={styles.page}>
 
@@ -189,9 +195,12 @@ export default function Page() {
                     + Add Disease
                 </button>
                 <button style={styles.addBtn} onClick={() => setOpen(true)}>
-                    + Add
+                    + Add Animal
                 </button>
-                <button style={styles.addBtn} onClick={handleback}>
+                <button style={styles.addBtn} onClick={handlevacine}>
+                     <FaSyringe /> Add Vacine
+                </button>
+                <button  style={{backgroundColor:"green", color:"white", borderRadius:"10px"}} onClick={handleback}>
                     - Back
                 </button>
             </div>

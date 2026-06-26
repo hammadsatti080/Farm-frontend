@@ -10,7 +10,7 @@ import Mainfile from "../MilkSale/Mainfile";
 import BuyanimalCatagory from "../Animal/BuyanimalCatagory";
 import Stockhandler from "../Animal/Stockhandler";
 import Inventorycatagory from "../CategoryManagers/Inventorycatagory";
-import VaccinatedAnimals from "../VaccinatedAnimal/VaccinatedAnimals";
+import VaccinatedAnimals from "../VaccinatedAnimal/page";
 import Workcatagory from "../CategoryManagers/Workcatagory";
 import Handleteam from "../Team Management/Handleteam";
 import Attendance from "../Attendence/Attendance";
