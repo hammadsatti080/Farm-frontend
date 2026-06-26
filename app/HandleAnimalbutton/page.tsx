@@ -165,6 +165,10 @@ export default function Page() {
         (a) => a.vacine === "Not Vaccinated"
     ).length;
 
+
+    const handledisease = () => {
+        router.push("/DiseaseHistoryPage")
+    }
     return (
         <div style={styles.page}>
 
@@ -181,7 +185,9 @@ export default function Page() {
                     onChange={(e) => setSearch(e.target.value)}
                     style={styles.search}
                 />
-
+                <button style={styles.addBtn} onClick={handledisease}>
+                    + Add Disease
+                </button>
                 <button style={styles.addBtn} onClick={() => setOpen(true)}>
                     + Add
                 </button>

@@ -28,8 +28,12 @@ import {
   FaWarehouse,
   FaBriefcase,
   FaClipboardList,
+
 } from "react-icons/fa6";
-import { GiMilkCarton , GiBarn } from "react-icons/gi";
+import { GiMilkCarton, GiBarn } from "react-icons/gi";
+import { FaSignOutAlt } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -45,6 +49,7 @@ export default function Page() {
     { id: "Vacine", label: "Vaccine", icon: FaSyringe },
     { id: "team", label: "Team Management", icon: FaUsers },
     { id: "Attendence", label: "Attendance Management", icon: FaClipboardCheck },
+
   ];
 
   const settingsLinks = [
@@ -60,6 +65,11 @@ export default function Page() {
     setSelectedSetting("");
     setShowMobileMenu(false);
   };
+
+  const router = useRouter();
+  const handlegoback = () => {
+    router.push("/Auth")
+  }
 
   return (
     <div className="dashboard-container">
@@ -92,11 +102,20 @@ export default function Page() {
             );
           })}
 
+
+
           <button
             onClick={() => setShowSettings(!showSettings)}
             className="active-mobile"
           >
             Settings {showSettings ? "▲" : "▼"}
+          </button>
+
+          <button
+            onClick={handlegoback}
+            className="active-mobile"
+          >
+            <FaSignOutAlt />  Logout
           </button>
 
           {showSettings && (
@@ -122,12 +141,12 @@ export default function Page() {
       <div className="desktop-layout">
         {/* Sidebar */}
         <aside className="sidebar">
-         <div className="logo">
-  <div className="logo-mark">
-    <GiBarn size={22} />
-  </div>
-  <h2>Farm House</h2>
-</div>
+          <div className="logo">
+            <div className="logo-mark">
+              <GiBarn size={22} />
+            </div>
+            <h2>Farm House</h2>
+          </div>
 
           <ul className="menu">
             {links.map((link) => {
@@ -146,6 +165,13 @@ export default function Page() {
                 </li>
               );
             })}
+            
+            <button
+              onClick={handlegoback}
+              className="active-mobile" style={{ fontSize: "20px", marginTop:"20px",marginBottom:"20px", marginLeft: "10px", color: "white", backgroundColor: "#0f172a", width:"70px" }}
+            >
+              <FaSignOutAlt />
+            </button>
 
             {/* Settings Dropdown */}
             <li
@@ -154,6 +180,8 @@ export default function Page() {
             >
               Settings {showSettings ? "▲" : "▼"}
             </li>
+
+            
 
             {showSettings && (
               <ul className="submenu">
@@ -197,6 +225,7 @@ export default function Page() {
           {activeTab === "Attendence" && selectedSetting === "" && (
             <Attendance />
           )}
+
 
           {/* Settings Pages */}
           {selectedSetting === "category" && <Catagory />}
