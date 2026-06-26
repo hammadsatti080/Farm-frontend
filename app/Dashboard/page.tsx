@@ -47,7 +47,6 @@ export default function Page() {
     { id: "Milk", label: "Milk", icon: GiMilkCarton },
     { id: "Sale", label: "Sale", icon: FaTag },
     { id: "Stock", label: "Stock", icon: FaWarehouse },
-    { id: "Vacine", label: "Vaccine", icon: FaSyringe },
     { id: "team", label: "Team Management", icon: FaUsers },
     { id: "Attendence", label: "Attendance Management", icon: FaClipboardCheck },
 

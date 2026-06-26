@@ -107,7 +107,7 @@ export default function Workcatagory() {
 
     return (
         <>
-            <div className="container">
+            
                 <div className="wrapper">
                     <div className="header">
                         <h1>
@@ -186,29 +186,21 @@ export default function Workcatagory() {
                         </div>
                     )}
                 </div>
-            </div>
+          
 
             <style jsx>{`
         * {
           box-sizing: border-box;
         }
 
-        .container {
-          width: 100%;
-          min-height: 100vh;
-          overflow-x: hidden;
-          background: linear-gradient(
-            135deg,
-            #f3f4f6,
-            #e5e7eb
-          );
-          padding: 20px;
-        }
+      
 
         .wrapper {
           width: 100%;
           max-width: 1200px;
+          
           margin: 0 auto;
+         
         }
 
         .header {
@@ -270,7 +262,7 @@ export default function Workcatagory() {
             auto-fit,
             minmax(250px, 1fr)
           );
-          gap: 40px;
+          gap: 60px;
         }
 
         .card {

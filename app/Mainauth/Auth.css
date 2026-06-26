@@ -11,13 +11,7 @@ body {
 }
 
 /* CENTER CONTAINER */
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-}
+
 
 /* CARD DESIGN */
 .card {
@@ -28,6 +22,7 @@ body {
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   transition: 0.3s ease;
+
 }
 
 /* TITLE */

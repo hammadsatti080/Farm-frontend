@@ -5,18 +5,13 @@ import Register from "./Register";
 
 export default function Maincom() {
     return (
-        <div className="container">
+        <div >
 
-            {/* LEFT FORM */}
-            <div >
-                <Register />
-            </div>
 
-            {/* RIGHT CARDS */}
-            <div className="cards-section">
-                <Fetchadmin />
+            <Register />
 
-            </div>
+
+
 
         </div>
     );

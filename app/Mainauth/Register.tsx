@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import "./Auth.css";
+import Fetchadmin from "./Fetchadmin";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -37,7 +38,8 @@ export default function Register() {
   };
 
   return (
-    <div className="container">
+   
+     <div >
       <div className="card">
         <h2>Admin Register</h2>
 
@@ -58,6 +60,8 @@ export default function Register() {
           {loading ? "Registering..." : "Register"}
         </button>
       </div>
-    </div>
+      <Fetchadmin />
+      </div>
+   
   );
 }
