@@ -321,7 +321,7 @@ export default function Stock() {
         <div
             style={{
                 minHeight: "100vh",
-                background: "#FAF6EE",
+                background: "linear-gradient(135deg, #e0f2fe, #f0f9ff)",
                 padding: "48px 32px 64px",
             }}
         >
