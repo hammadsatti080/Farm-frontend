@@ -13,6 +13,19 @@ type Animal = {
     image?: string;
 };
 
+type VaccinationRecord = {
+    _id: string;
+    animalId: string | { _id: string };
+    vaccineName: string;
+    doctorId?: string;
+    dateGiven: string;
+    nextDueDate?: string;
+    notes?: string;
+    status: "Completed" | "Pending" | "Overdue";
+    createdAt?: string;
+    updatedAt?: string;
+};
+
 const FONT_IMPORT_ID = "farm-stock-fonts";
 
 function ensureFonts() {
@@ -26,12 +39,54 @@ function ensureFonts() {
     document.head.appendChild(link);
 }
 
-// Maps the loose "milk" status field to a record-tag color + label.
+// Normalizes whatever string we end up with (vaccination status, or legacy
+// "vacine" field) into a record-tag color + label.
+function vaccineTag(statusOrLegacy: string) {
+    const v = (statusOrLegacy || "").toLowerCase();
+    if (v === "completed" || v === "vaccinated") {
+        return { label: "Vaccinated", tone: "good" as const };
+    }
+    if (v === "pending") {
+        return { label: "Pending", tone: "watch" as const };
+    }
+    if (v === "overdue") {
+        return { label: "Overdue", tone: "alert" as const };
+    }
+    return { label: statusOrLegacy || "Due", tone: "alert" as const };
+}
 
-function vaccineTag(vacine: string) {
-    const v = (vacine || "").toLowerCase();
-    if (v === "vaccinated") return { label: "Vaccinated", tone: "good" as const };
-    return { label: vacine || "Due", tone: "alert" as const };
+// Builds a lookup of animalId -> most recent Vaccination record.
+function buildLatestVaccinationMap(
+    records: VaccinationRecord[]
+): Record<string, VaccinationRecord> {
+    const latest: Record<string, VaccinationRecord> = {};
+
+    for (const rec of records) {
+        const id =
+            typeof rec.animalId === "string" ? rec.animalId : rec.animalId?._id;
+        if (!id) continue;
+
+        const existing = latest[id];
+        if (!existing) {
+            latest[id] = rec;
+            continue;
+        }
+
+        // Prefer whichever record has the more recent dateGiven; fall back to
+        // updatedAt/createdAt if dateGiven ties or is missing.
+        const existingDate = new Date(
+            existing.dateGiven || existing.updatedAt || existing.createdAt || 0
+        ).getTime();
+        const recDate = new Date(
+            rec.dateGiven || rec.updatedAt || rec.createdAt || 0
+        ).getTime();
+
+        if (recDate >= existingDate) {
+            latest[id] = rec;
+        }
+    }
+
+    return latest;
 }
 
 const toneColors: Record<"good" | "watch" | "alert", { bg: string; fg: string; dot: string }> = {
@@ -74,9 +129,18 @@ function EarTag({ label, tone }: { label: string; tone: "good" | "watch" | "aler
     );
 }
 
-function RecordCard({ animal, index }: { animal: Animal; index: number }) {
-
-    const vac = vaccineTag(animal.vacine);
+function RecordCard({
+    animal,
+    index,
+    vaccination,
+}: {
+    animal: Animal;
+    index: number;
+    vaccination?: VaccinationRecord;
+}) {
+    // Prefer the live Vaccination record's status; fall back to the legacy
+    // "vacine" string on the animal if no vaccination record exists yet.
+    const vac = vaccineTag(vaccination?.status || animal.vacine);
     const recordNo = String(index + 1).padStart(3, "0");
 
     return (
@@ -217,15 +281,33 @@ function SkeletonCard() {
 
 export default function Stock() {
     const [animals, setAnimals] = useState<Animal[]>([]);
+    const [vaccinationMap, setVaccinationMap] = useState<
+        Record<string, VaccinationRecord>
+    >({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
     useEffect(() => {
         ensureFonts();
-        fetch("https://farm-backend-lac.vercel.app/api/Handleanimals")
-            .then((res) => res.json())
-            .then((data) => {
-                setAnimals(Array.isArray(data) ? data : []);
+
+        Promise.all([
+            fetch("https://farm-backend-lac.vercel.app/api/Handleanimals").then((res) =>
+                res.json()
+            ),
+            fetch("https://farm-backend-lac.vercel.app/api/vaccination").then((res) =>
+                res.json()
+            ),
+        ])
+            .then(([animalsData, vaccinationData]) => {
+                setAnimals(Array.isArray(animalsData) ? animalsData : []);
+
+                const records: VaccinationRecord[] = Array.isArray(vaccinationData)
+                    ? vaccinationData
+                    : Array.isArray(vaccinationData?.data)
+                        ? vaccinationData.data
+                        : [];
+
+                setVaccinationMap(buildLatestVaccinationMap(records));
                 setLoading(false);
             })
             .catch((err) => {
@@ -243,47 +325,47 @@ export default function Stock() {
                 padding: "48px 32px 64px",
             }}
         >
-            <div style={{ maxWidth: 1180, margin: "0 auto"  }}>
-               <div
-  style={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center",
-    borderBottom: "2px solid #1C1A17",
-    paddingBottom: 18,
-    marginBottom: 32,
-  }}
->
-  <div>
-    <div
-      style={{
-        fontFamily: "Inter, sans-serif",
-        fontSize: 12,
-        fontWeight: 600,
-        letterSpacing: "0.14em",
-        textTransform: "uppercase",
-        color: "#8B5A2B",
-        marginBottom: 6,
-      }}
-    >
-      Livestock Register
-    </div>
+            <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        textAlign: "center",
+                        borderBottom: "2px solid #1C1A17",
+                        paddingBottom: 18,
+                        marginBottom: 32,
+                    }}
+                >
+                    <div>
+                        <div
+                            style={{
+                                fontFamily: "Inter, sans-serif",
+                                fontSize: 12,
+                                fontWeight: 600,
+                                letterSpacing: "0.14em",
+                                textTransform: "uppercase",
+                                color: "#8B5A2B",
+                                marginBottom: 6,
+                            }}
+                        >
+                            Livestock Register
+                        </div>
 
-    <h1
-      style={{
-        margin: 0,
-        fontFamily: "'Fraunces', serif",
-        fontSize: "clamp(32px, 4vw, 44px)",
-        fontWeight: 700,
-        color: "#1C1A17",
-        letterSpacing: "-0.01em",
-      }}
-    >
-      Farm Stock
-    </h1>
-  </div>
-</div>
+                        <h1
+                            style={{
+                                margin: 0,
+                                fontFamily: "'Fraunces', serif",
+                                fontSize: "clamp(32px, 4vw, 44px)",
+                                fontWeight: 700,
+                                color: "#1C1A17",
+                                letterSpacing: "-0.01em",
+                            }}
+                        >
+                            Farm Stock
+                        </h1>
+                    </div>
+                </div>
 
                 {error ? (
                     <div
@@ -297,7 +379,7 @@ export default function Stock() {
                             fontSize: 14,
                         }}
                     >
-                        Could not  load the register. Check the connection and try again.
+                        Could not load the register. Check the connection and try again.
                     </div>
                 ) : loading ? (
                     <div
@@ -333,7 +415,12 @@ export default function Stock() {
                         }}
                     >
                         {animals.map((animal, i) => (
-                            <RecordCard key={animal._id} animal={animal} index={i} />
+                            <RecordCard
+                                key={animal._id}
+                                animal={animal}
+                                index={i}
+                                vaccination={vaccinationMap[animal._id]}
+                            />
                         ))}
                     </div>
                 )}
